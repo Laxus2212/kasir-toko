@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Kasir Toko</title>
 
     <style>
@@ -66,16 +65,19 @@
             font-size: 14px;
         }
 
-        .form-group input {
+        .form-group input,
+        .form-group select {
             width: 100%;
             padding: 12px;
             border: 1px solid #d1d5db;
             border-radius: 8px;
             font-size: 15px;
             outline: none;
+            background: white;
         }
 
-        .form-group input:focus {
+        .form-group input:focus,
+        .form-group select:focus {
             border-color: #2563eb;
         }
 
@@ -148,6 +150,32 @@
             font-weight: bold;
         }
 
+        .payment-box {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .change-box {
+            display: flex;
+            justify-content: space-between;
+            background: #ecfdf5;
+            color: #065f46;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .btn-bayar {
+            background: #16a34a;
+            color: white;
+        }
+
+        .btn-bayar:hover {
+            background: #15803d;
+        }
+
         .kosong {
             text-align: center;
             padding: 25px;
@@ -186,7 +214,7 @@
 
     <div class="container">
 
-        <!-- FORM PRODUK -->
+        <!-- TAMBAH PRODUK -->
         <div class="card">
             <h2>Tambah Produk</h2>
 
@@ -257,6 +285,52 @@
                 <span>TOTAL</span>
                 <span id="total">Rp 0</span>
             </div>
+
+            <!-- PEMBAYARAN -->
+            <div class="payment-box">
+
+                <h2>Pembayaran</h2>
+
+                <div class="form-group">
+                    <label for="metodePembayaran">
+                        Metode Pembayaran
+                    </label>
+
+                    <select id="metodePembayaran" onchange="ubahMetode()">
+                        <option value="cash">Cash</option>
+                        <option value="qris">QRIS</option>
+                    </select>
+                </div>
+
+                <div
+                    class="form-group"
+                    id="uangBayarBox"
+                >
+                    <label for="uangBayar">
+                        Uang Dibayar
+                    </label>
+
+                    <input
+                        type="number"
+                        id="uangBayar"
+                        placeholder="Contoh: 50000"
+                        oninput="hitungKembalian()"
+                    >
+                </div>
+
+                <div class="change-box">
+                    <span>Kembalian</span>
+                    <span id="kembalian">Rp 0</span>
+                </div>
+
+                <button
+                    class="btn btn-bayar"
+                    onclick="prosesPembayaran()"
+                >
+                    BAYAR
+                </button>
+
+            </div>
         </div>
 
     </div>
@@ -273,12 +347,23 @@
             }).format(angka);
         }
 
+        function getTotal() {
+            return keranjang.reduce(function(total, produk) {
+                return total + produk.subtotal;
+            }, 0);
+        }
+
         function tambahProduk() {
 
-            const nama = document.getElementById("namaProduk").value.trim();
+            const nama = document
+                .getElementById("namaProduk")
+                .value
+                .trim();
+
             const harga = Number(
                 document.getElementById("hargaProduk").value
             );
+
             const jumlah = Number(
                 document.getElementById("jumlahProduk").value
             );
@@ -340,7 +425,7 @@
 
             let total = 0;
 
-            keranjang.forEach((produk, index) => {
+            keranjang.forEach(function(produk, index) {
 
                 total += produk.subtotal;
 
@@ -371,11 +456,132 @@
             });
 
             totalElement.textContent = formatRupiah(total);
+
+            hitungKembalian();
         }
 
         function hapusProduk(index) {
 
             keranjang.splice(index, 1);
+
+            tampilkanKeranjang();
+        }
+
+        function ubahMetode() {
+
+            const metode = document.getElementById(
+                "metodePembayaran"
+            ).value;
+
+            const uangBox = document.getElementById(
+                "uangBayarBox"
+            );
+
+            const uangBayar = document.getElementById(
+                "uangBayar"
+            );
+
+            if (metode === "qris") {
+
+                uangBox.style.display = "none";
+                uangBayar.value = "";
+
+                document.getElementById(
+                    "kembalian"
+                ).textContent = "Rp 0";
+
+            } else {
+
+                uangBox.style.display = "block";
+
+            }
+        }
+
+        function hitungKembalian() {
+
+            const metode = document.getElementById(
+                "metodePembayaran"
+            ).value;
+
+            if (metode === "qris") {
+                return;
+            }
+
+            const total = getTotal();
+
+            const uangBayar = Number(
+                document.getElementById("uangBayar").value
+            );
+
+            let kembalian = uangBayar - total;
+
+            if (kembalian < 0) {
+                kembalian = 0;
+            }
+
+            document.getElementById(
+                "kembalian"
+            ).textContent = formatRupiah(kembalian);
+        }
+
+        function prosesPembayaran() {
+
+            if (keranjang.length === 0) {
+                alert("Keranjang masih kosong.");
+                return;
+            }
+
+            const metode = document.getElementById(
+                "metodePembayaran"
+            ).value;
+
+            const total = getTotal();
+
+            if (metode === "cash") {
+
+                const uangBayar = Number(
+                    document.getElementById("uangBayar").value
+                );
+
+                if (uangBayar <= 0) {
+                    alert("Masukkan uang pembayaran.");
+                    return;
+                }
+
+                if (uangBayar < total) {
+                    alert(
+                        "Uang pembayaran masih kurang " +
+                        formatRupiah(total - uangBayar)
+                    );
+                    return;
+                }
+
+                const kembalian = uangBayar - total;
+
+                alert(
+                    "PEMBAYARAN BERHASIL!\n\n" +
+                    "Total: " + formatRupiah(total) + "\n" +
+                    "Dibayar: " + formatRupiah(uangBayar) + "\n" +
+                    "Kembalian: " + formatRupiah(kembalian)
+                );
+
+            } else {
+
+                alert(
+                    "PEMBAYARAN QRIS BERHASIL!\n\n" +
+                    "Total: " + formatRupiah(total)
+                );
+            }
+
+            keranjang = [];
+
+            document.getElementById(
+                "uangBayar"
+            ).value = "";
+
+            document.getElementById(
+                "kembalian"
+            ).textContent = "Rp 0";
 
             tampilkanKeranjang();
         }
