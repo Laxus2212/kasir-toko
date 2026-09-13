@@ -1,732 +1,326 @@
-/*
- * PINDAH HALAMAN
- */
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-function bukaHalaman(
-    namaHalaman,
-    tombol
-) {
+    <title>Kasir</title>
 
-    const semuaHalaman =
-        document.querySelectorAll(
-            ".page"
-        );
-
-
-    semuaHalaman.forEach(
-        function(halaman) {
-
-            halaman.classList.remove(
-                "active"
-            );
-
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
         }
-    );
 
-
-    document.getElementById(
-        namaHalaman
-    ).classList.add(
-        "active"
-    );
-
-
-    const semuaTombol =
-        document.querySelectorAll(
-            ".menu-btn"
-        );
-
-
-    semuaTombol.forEach(
-        function(btn) {
-
-            btn.classList.remove(
-                "active"
-            );
-
+        h1, h2, h3 {
+            margin-top: 0;
         }
-    );
 
-
-    tombol.classList.add(
-        "active"
-    );
-
-
-    const judul =
-        tombol.textContent.trim();
-
-
-    document.getElementById(
-        "judulHalaman"
-    ).textContent =
-        judul;
-
-}
-
-
-
-/*
- * FORMAT RUPIAH
- */
-
-function formatRupiah(
-    angka
-) {
-
-    return new Intl.NumberFormat(
-        "id-ID",
-        {
-            style: "currency",
-            currency: "IDR",
-            minimumFractionDigits: 0
+        .menu {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
         }
-    ).format(angka);
 
-}
+        .menu-btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            background: #ddd;
+        }
+
+        .menu-btn.active {
+            background: #222;
+            color: white;
+        }
+
+        .page {
+            display: none;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 3px;
+        }
+
+        .btn-tambah {
+            background: #222;
+            color: white;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        .form-produk {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background: #fafafa;
+        }
+
+        .form-produk input,
+        .form-produk select,
+        #metodePembayaran,
+        #uangBayar {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn-simpan {
+            background: #198754;
+            color: white;
+        }
+
+        .btn-batal {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-bayar {
+            background: #0d6efd;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1 id="judulHalaman">Kasir</h1>
+
+    <div class="menu">
+        <button
+            class="menu-btn active"
+            onclick="bukaHalaman('kasir', this)"
+        >
+            Kasir
+        </button>
+
+        <button
+            class="menu-btn"
+            onclick="bukaHalaman('produk', this)"
+        >
+            Produk
+        </button>
+    </div>
 
 
+    <!-- ==================== KASIR ==================== -->
 
-/*
- * DATA KERANJANG
- */
+    <div id="kasir" class="page active">
 
-let keranjang = [];
+        <h2>Kasir</h2>
 
-
-
-/*
- * TOTAL
- */
-
-function getTotal() {
-
-    return keranjang.reduce(
-        function(total, produk) {
-
-            return total +
-                produk.subtotal;
-
-        },
-        0
-    );
-
-}
+        <button
+            class="btn-tambah"
+            onclick="tampilkanFormProduk()"
+        >
+            + Tambah Produk
+        </button>
 
 
+        <h3>Keranjang</h3>
 
-/*
- * TAMPILKAN KERANJANG
- */
-
-function tampilkanKeranjang() {
-
-    const tbody =
-        document.getElementById(
-            "keranjang"
-        );
-
-
-    tbody.innerHTML = "";
-
-
-    if (
-        keranjang.length === 0
-    ) {
-
-        tbody.innerHTML = `
-
-            <tr>
-
-                <td
-                    colspan="3"
-                    class="kosong"
-                >
-                    Keranjang kosong
-                </td>
-
-            </tr>
-
-        `;
-
-    }
-
-
-    keranjang.forEach(
-        function(produk) {
-
-            tbody.innerHTML += `
-
+        <table border="1" width="100%">
+            <thead>
                 <tr>
-
-                    <td>
-                        ${produk.nama}
-                    </td>
-
-                    <td>
-                        ${produk.jumlah}
-                    </td>
-
-                    <td>
-                        ${formatRupiah(
-                            produk.subtotal
-                        )}
-                    </td>
-
+                    <th>Produk</th>
+                    <th>Jumlah</th>
+                    <th>Subtotal</th>
                 </tr>
+            </thead>
 
-            `;
+            <tbody id="keranjang">
+                <tr>
+                    <td colspan="3" class="kosong">
+                        Keranjang kosong
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
-        }
-    );
 
+        <h3>
+            Total:
+            <span id="total">Rp 0</span>
+        </h3>
 
-    document.getElementById(
-        "total"
-    ).textContent =
-        formatRupiah(
-            getTotal()
-        );
 
-}
+        <hr>
 
 
+        <h3>Pembayaran</h3>
 
-/*
- * GOOGLE APPS SCRIPT
- */
+        <select id="metodePembayaran">
+            <option value="cash">Cash</option>
+            <option value="qris">QRIS</option>
+        </select>
 
-const SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbxX9XqRImLGvvTosHjLYBS4G4HkZPwTb_XfKxiFNHxs83BSYkbm9XDz28gJ4huMsPML/exec";
 
+        <input
+            type="number"
+            id="uangBayar"
+            placeholder="Uang pembayaran"
+        >
 
 
-/*
- * KIRIM DATA KE GOOGLE SHEETS
- */
+        <p>
+            Kembalian:
+            <span id="kembalian">Rp 0</span>
+        </p>
 
-function kirimKeGoogleSheets(
-    data
-) {
 
-    const form =
-        document.createElement(
-            "form"
-        );
+        <button
+            class="btn-bayar"
+            onclick="prosesPembayaran()"
+        >
+            Proses Pembayaran
+        </button>
 
+    </div>
 
-    form.method =
-        "POST";
 
+    <!-- ==================== PRODUK ==================== -->
 
-    form.target =
-        "kirimFrame";
+    <div id="produk" class="page">
 
+        <h2>Produk</h2>
 
-    form.action =
-        SCRIPT_URL;
+        <button
+            class="btn-tambah"
+            onclick="tampilkanFormProduk()"
+        >
+            + Tambah Produk
+        </button>
 
+    </div>
 
-    const input =
-        document.createElement(
-            "input"
-        );
 
+    <!-- ==================== FORM PRODUK ==================== -->
 
-    input.type =
-        "hidden";
+    <div
+        id="formProduk"
+        class="form-produk"
+    >
 
+        <h2>Tambah Produk</h2>
 
-    input.name =
-        "data";
 
+        <input
+            type="text"
+            id="kodeProduk"
+            placeholder="Kode Produk"
+        >
 
-    input.value =
-        JSON.stringify(
-            data
-        );
 
+        <input
+            type="text"
+            id="barcodeProduk"
+            placeholder="Barcode"
+        >
 
-    form.appendChild(
-        input
-    );
 
+        <input
+            type="text"
+            id="namaProdukBaru"
+            placeholder="Nama Produk"
+        >
 
-    document.body.appendChild(
-        form
-    );
 
+        <input
+            type="text"
+            id="kategoriProduk"
+            placeholder="Kategori"
+        >
 
-    form.submit();
 
+        <input
+            type="number"
+            id="hargaBeli"
+            placeholder="Harga Beli"
+        >
 
-    form.remove();
 
-}
+        <input
+            type="number"
+            id="hargaJual"
+            placeholder="Harga Jual"
+        >
 
 
+        <input
+            type="number"
+            id="stokAwal"
+            value="0"
+            placeholder="Stok Awal"
+        >
 
-/*
- * FORM PRODUK
- */
 
-function tampilkanFormProduk() {
+        <input
+            type="number"
+            id="stokMinimum"
+            value="5"
+            placeholder="Stok Minimum"
+        >
 
-    document.getElementById(
-        "formProduk"
-    ).style.display =
-        "block";
 
-}
+        <select id="satuanProduk">
+            <option value="PCS">PCS</option>
+            <option value="BOX">BOX</option>
+            <option value="KG">KG</option>
+            <option value="LITER">LITER</option>
+        </select>
 
 
-function tutupFormProduk() {
+        <select id="statusProduk">
+            <option value="Aktif">Aktif</option>
+            <option value="Tidak Aktif">Tidak Aktif</option>
+        </select>
 
-    document.getElementById(
-        "formProduk"
-    ).style.display =
-        "none";
 
-}
+        <button
+            class="btn-simpan"
+            onclick="simpanProduk()"
+        >
+            Simpan Produk
+        </button>
 
 
+        <button
+            class="btn-batal"
+            onclick="tutupFormProduk()"
+        >
+            Batal
+        </button>
 
-/*
- * SIMPAN PRODUK
- */
+    </div>
 
-function simpanProduk() {
 
-    const kode =
-        document.getElementById(
-            "kodeProduk"
-        ).value.trim();
+    <!-- HUBUNGKAN DENGAN SCRIPT.JS -->
+    <script src="script.js"></script>
 
-
-    const barcode =
-        document.getElementById(
-            "barcodeProduk"
-        ).value.trim();
-
-
-    const nama =
-        document.getElementById(
-            "namaProdukBaru"
-        ).value.trim();
-
-
-    const kategori =
-        document.getElementById(
-            "kategoriProduk"
-        ).value.trim();
-
-
-    const hargaBeli =
-        Number(
-            document.getElementById(
-                "hargaBeli"
-            ).value
-        );
-
-
-    const hargaJual =
-        Number(
-            document.getElementById(
-                "hargaJual"
-            ).value
-        );
-
-
-    const stok =
-        Number(
-            document.getElementById(
-                "stokAwal"
-            ).value
-        );
-
-
-    const stokMinimum =
-        Number(
-            document.getElementById(
-                "stokMinimum"
-            ).value
-        );
-
-
-    const satuan =
-        document.getElementById(
-            "satuanProduk"
-        ).value;
-
-
-    const status =
-        document.getElementById(
-            "statusProduk"
-        ).value;
-
-
-    if (!kode) {
-
-        alert(
-            "Kode produk wajib diisi."
-        );
-
-        return;
-
-    }
-
-
-    if (!nama) {
-
-        alert(
-            "Nama produk wajib diisi."
-        );
-
-        return;
-
-    }
-
-
-    if (hargaJual <= 0) {
-
-        alert(
-            "Harga jual wajib diisi."
-        );
-
-        return;
-
-    }
-
-
-    if (hargaBeli < 0) {
-
-        alert(
-            "Harga beli tidak boleh kurang dari 0."
-        );
-
-        return;
-
-    }
-
-
-    if (stok < 0) {
-
-        alert(
-            "Stok tidak boleh kurang dari 0."
-        );
-
-        return;
-
-    }
-
-
-    const data = {
-
-        action:
-            "produk_tambah",
-
-        kodeProduk:
-            kode,
-
-        barcode:
-            barcode,
-
-        namaProduk:
-            nama,
-
-        kategori:
-            kategori,
-
-        hargaBeli:
-            hargaBeli,
-
-        hargaJual:
-            hargaJual,
-
-        stok:
-            stok,
-
-        stokMinimum:
-            stokMinimum,
-
-        satuan:
-            satuan,
-
-        status:
-            status
-
-    };
-
-
-    /*
-     * KIRIM KE GOOGLE SHEETS
-     */
-
-    kirimKeGoogleSheets(
-        data
-    );
-
-
-    alert(
-        "Produk berhasil dikirim ke Google Sheets."
-    );
-
-
-    /*
-     * RESET FORM
-     */
-
-    document.getElementById(
-        "kodeProduk"
-    ).value = "";
-
-
-    document.getElementById(
-        "barcodeProduk"
-    ).value = "";
-
-
-    document.getElementById(
-        "namaProdukBaru"
-    ).value = "";
-
-
-    document.getElementById(
-        "kategoriProduk"
-    ).value = "";
-
-
-    document.getElementById(
-        "hargaBeli"
-    ).value = "";
-
-
-    document.getElementById(
-        "hargaJual"
-    ).value = "";
-
-
-    document.getElementById(
-        "stokAwal"
-    ).value = "0";
-
-
-    document.getElementById(
-        "stokMinimum"
-    ).value = "5";
-
-
-    document.getElementById(
-        "satuanProduk"
-    ).value = "PCS";
-
-
-    document.getElementById(
-        "statusProduk"
-    ).value = "Aktif";
-
-
-    tutupFormProduk();
-
-}
-
-
-
-/*
- * PROSES PEMBAYARAN
- */
-
-function prosesPembayaran() {
-
-    if (
-        keranjang.length === 0
-    ) {
-
-        alert(
-            "Keranjang masih kosong."
-        );
-
-        return;
-
-    }
-
-
-    const metode =
-        document.getElementById(
-            "metodePembayaran"
-        ).value;
-
-
-    const total =
-        getTotal();
-
-
-    let uangBayar = 0;
-
-
-    if (
-        metode === "cash"
-    ) {
-
-        uangBayar =
-            Number(
-                document.getElementById(
-                    "uangBayar"
-                ).value
-            );
-
-
-        if (
-            uangBayar < total
-        ) {
-
-            alert(
-                "Uang pembayaran kurang."
-            );
-
-            return;
-
-        }
-
-    }
-
-
-    const sekarang =
-        new Date();
-
-
-    const idTransaksi =
-        "TRX-" +
-        sekarang.getTime();
-
-
-    const tanggal =
-        sekarang.toLocaleDateString(
-            "id-ID"
-        );
-
-
-    const jam =
-        sekarang.toLocaleTimeString(
-            "id-ID"
-        );
-
-
-    keranjang.forEach(
-        function(produk) {
-
-            const data = {
-
-                idTransaksi:
-                    idTransaksi,
-
-                tanggal:
-                    tanggal,
-
-                jam:
-                    jam,
-
-                produk:
-                    produk.nama,
-
-                jumlah:
-                    produk.jumlah,
-
-                total:
-                    produk.subtotal,
-
-                metode:
-                    metode.toUpperCase()
-
-            };
-
-
-            kirimKeGoogleSheets(
-                data
-            );
-
-        }
-    );
-
-
-    let pesan =
-        "PEMBAYARAN BERHASIL!\n\n";
-
-
-    pesan +=
-        "ID Transaksi: " +
-        idTransaksi +
-        "\n";
-
-
-    pesan +=
-        "Total: " +
-        formatRupiah(
-            total
-        );
-
-
-    if (
-        metode === "cash"
-    ) {
-
-        pesan +=
-            "\nKembalian: " +
-            formatRupiah(
-                uangBayar - total
-            );
-
-    } else {
-
-        pesan +=
-            "\nMetode: QRIS";
-
-    }
-
-
-    alert(
-        pesan
-    );
-
-
-    keranjang = [];
-
-
-    document.getElementById(
-        "uangBayar"
-    ).value = "";
-
-
-    document.getElementById(
-        "kembalian"
-    ).textContent =
-        "Rp 0";
-
-
-    tampilkanKeranjang();
-
-}
-
-
-
-/*
- * IFRAME UNTUK KIRIM DATA
- */
-
-const iframe =
-    document.createElement(
-        "iframe"
-    );
-
-
-iframe.name =
-    "kirimFrame";
-
-
-iframe.style.display =
-    "none";
-
-
-document.body.appendChild(
-    iframe
-);
+</body>
+</html>
