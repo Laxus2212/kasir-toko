@@ -1,1086 +1,3 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>POS Kasir Toko</title>
-
-    <style>
-
-        * {
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            margin: 0;
-            background: #f4f6f8;
-            color: #222;
-        }
-
-        /* SIDEBAR */
-
-        .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 240px;
-            background: #111827;
-            color: white;
-            padding: 20px 12px;
-            overflow-y: auto;
-        }
-
-        .logo {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .logo h2 {
-            margin: 0;
-        }
-
-        .logo p {
-            margin: 5px 0 0;
-            font-size: 12px;
-            color: #9ca3af;
-        }
-
-        .menu-btn {
-            width: 100%;
-            padding: 13px 15px;
-            margin-bottom: 6px;
-            border: none;
-            border-radius: 8px;
-            background: transparent;
-            color: #d1d5db;
-            text-align: left;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .menu-btn:hover,
-        .menu-btn.active {
-            background: #2563eb;
-            color: white;
-        }
-
-
-        /* CONTENT */
-
-        .main {
-            margin-left: 240px;
-            padding: 25px;
-        }
-
-        .topbar {
-            background: white;
-            padding: 18px 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            box-shadow: 0 3px 12px rgba(0,0,0,.06);
-        }
-
-        .topbar h1 {
-            margin: 0;
-            font-size: 24px;
-        }
-
-        .topbar p {
-            margin: 5px 0 0;
-            color: #6b7280;
-        }
-
-
-        /* PAGE */
-
-        .page {
-            display: none;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-
-        /* CARD */
-
-        .card {
-            background: white;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 12px;
-            box-shadow: 0 3px 12px rgba(0,0,0,.06);
-        }
-
-
-        /* DASHBOARD */
-
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-        }
-
-        .stat {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 3px 12px rgba(0,0,0,.06);
-        }
-
-        .stat-title {
-            color: #6b7280;
-            font-size: 14px;
-        }
-
-        .stat-value {
-            margin-top: 10px;
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-
-        /* FORM */
-
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: bold;
-        }
-
-        input,
-        select {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 15px;
-        }
-
-        button {
-            border: none;
-            border-radius: 8px;
-            padding: 12px 15px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .btn-primary {
-            background: #2563eb;
-            color: white;
-        }
-
-        .btn-success {
-            background: #16a34a;
-            color: white;
-        }
-
-        .btn-danger {
-            background: #dc2626;
-            color: white;
-        }
-
-
-        /* TABLE */
-
-        .table-wrapper {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th,
-        td {
-            padding: 12px;
-            border-bottom: 1px solid #e5e7eb;
-            text-align: left;
-        }
-
-        th {
-            background: #f3f4f6;
-        }
-
-
-        /* KASIR */
-
-        .kasir-grid {
-            display: grid;
-            grid-template-columns: 1fr 400px;
-            gap: 20px;
-        }
-
-        .total-box {
-            background: #111827;
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 20px;
-            font-weight: bold;
-            margin-top: 15px;
-        }
-
-        .kembalian {
-            background: #ecfdf5;
-            color: #065f46;
-            padding: 15px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-
-        .kosong {
-            text-align: center;
-            color: #777;
-            padding: 20px;
-        }
-
-
-        /* MOBILE */
-
-        @media (max-width: 900px) {
-
-            .sidebar {
-                width: 200px;
-            }
-
-            .main {
-                margin-left: 200px;
-            }
-
-            .dashboard-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .kasir-grid {
-                grid-template-columns: 1fr;
-            }
-
-        }
-
-
-        @media (max-width: 650px) {
-
-            .sidebar {
-                position: relative;
-                width: 100%;
-                height: auto;
-            }
-
-            .main {
-                margin-left: 0;
-                padding: 15px;
-            }
-
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-
-        }
-
-    </style>
-</head>
-
-
-<body>
-
-
-<!-- SIDEBAR -->
-
-<div class="sidebar">
-
-    <div class="logo">
-
-        <h2>POS TOKO</h2>
-
-        <p>Sistem Kasir</p>
-
-    </div>
-
-
-    <button
-        class="menu-btn active"
-        onclick="bukaHalaman('dashboard', this)"
-    >
-        🏠 Dashboard
-    </button>
-
-
-    <button
-        class="menu-btn"
-        onclick="bukaHalaman('kasir', this)"
-    >
-        🛒 Kasir
-    </button>
-
-
-    <button
-        class="menu-btn"
-        onclick="bukaHalaman('produk', this)"
-    >
-        📦 Produk
-    </button>
-
-
-    <button
-        class="menu-btn"
-        onclick="bukaHalaman('stokMasuk', this)"
-    >
-        📥 Stok Masuk
-    </button>
-
-
-    <button
-        class="menu-btn"
-        onclick="bukaHalaman('stokKeluar', this)"
-    >
-        📤 Stok Keluar
-    </button>
-
-
-    <button
-        class="menu-btn"
-        onclick="bukaHalaman('transaksi', this)"
-    >
-        🧾 Transaksi
-    </button>
-
-
-    <button
-        class="menu-btn"
-        onclick="bukaHalaman('pelanggan', this)"
-    >
-        👥 Pelanggan
-    </button>
-
-
-    <button
-        class="menu-btn"
-        onclick="bukaHalaman('pengeluaran', this)"
-    >
-        💰 Pengeluaran
-    </button>
-
-
-    <button
-        class="menu-btn"
-        onclick="bukaHalaman('laporan', this)"
-    >
-        📊 Laporan
-    </button>
-
-
-    <button
-        class="menu-btn"
-        onclick="bukaHalaman('pengaturan', this)"
-    >
-        ⚙️ Pengaturan
-    </button>
-
-</div>
-
-
-
-<!-- MAIN -->
-
-<div class="main">
-
-
-    <div class="topbar">
-
-        <h1 id="judulHalaman">
-            Dashboard
-        </h1>
-
-        <p>
-            Sistem Point of Sale Toko
-        </p>
-
-    </div>
-
-
-
-    <!-- DASHBOARD -->
-
-    <div
-        id="dashboard"
-        class="page active"
-    >
-
-        <div class="dashboard-grid">
-
-            <div class="stat">
-
-                <div class="stat-title">
-                    Omzet Hari Ini
-                </div>
-
-                <div
-                    class="stat-value"
-                    id="dashboardOmzet"
-                >
-                    Rp 0
-                </div>
-
-            </div>
-
-
-            <div class="stat">
-
-                <div class="stat-title">
-                    Transaksi
-                </div>
-
-                <div
-                    class="stat-value"
-                    id="dashboardTransaksi"
-                >
-                    0
-                </div>
-
-            </div>
-
-
-            <div class="stat">
-
-                <div class="stat-title">
-                    Produk Terjual
-                </div>
-
-                <div
-                    class="stat-value"
-                    id="dashboardProduk"
-                >
-                    0
-                </div>
-
-            </div>
-
-
-            <div class="stat">
-
-                <div class="stat-title">
-                    Stok Menipis
-                </div>
-
-                <div
-                    class="stat-value"
-                    id="dashboardStok"
-                >
-                    0
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="card">
-
-            <h2>
-                Selamat Datang di POS Toko
-            </h2>
-
-            <p>
-                Sistem kasir sedang dikembangkan
-                menjadi POS lengkap.
-            </p>
-
-        </div>
-
-    </div>
-
-
-
-    <!-- KASIR -->
-
-    <div
-        id="kasir"
-        class="page"
-    >
-
-        <div class="kasir-grid">
-
-
-            <div class="card">
-
-                <h2>
-                    Kasir
-                </h2>
-
-
-                <label>
-                    Cari Produk
-                </label>
-
-                <input
-                    type="text"
-                    id="cariProduk"
-                    placeholder="Ketik nama atau barcode produk..."
-                >
-
-
-                <div class="table-wrapper">
-
-                    <table>
-
-                        <thead>
-
-                            <tr>
-                                <th>Produk</th>
-                                <th>Harga</th>
-                                <th>Stok</th>
-                                <th>Aksi</th>
-                            </tr>
-
-                        </thead>
-
-
-                        <tbody id="daftarProdukKasir">
-
-                            <tr>
-
-                                <td
-                                    colspan="4"
-                                    class="kosong"
-                                >
-                                    Produk akan muncul di sini
-                                </td>
-
-                            </tr>
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </div>
-
-
-
-            <div class="card">
-
-                <h2>
-                    Keranjang
-                </h2>
-
-
-                <div class="table-wrapper">
-
-                    <table>
-
-                        <thead>
-
-                            <tr>
-                                <th>Produk</th>
-                                <th>Qty</th>
-                                <th>Total</th>
-                            </tr>
-
-                        </thead>
-
-
-                        <tbody id="keranjang">
-
-                            <tr>
-
-                                <td
-                                    colspan="3"
-                                    class="kosong"
-                                >
-                                    Keranjang kosong
-                                </td>
-
-                            </tr>
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-
-                <div class="total-box">
-
-                    <span>
-                        TOTAL
-                    </span>
-
-                    <span id="total">
-                        Rp 0
-                    </span>
-
-                </div>
-
-
-                <br>
-
-
-                <label>
-                    Metode Pembayaran
-                </label>
-
-                <select id="metodePembayaran">
-
-                    <option value="cash">
-                        Cash
-                    </option>
-
-                    <option value="qris">
-                        QRIS
-                    </option>
-
-                </select>
-
-
-                <label>
-                    Uang Dibayar
-                </label>
-
-                <input
-                    type="number"
-                    id="uangBayar"
-                    placeholder="Masukkan uang..."
-                >
-
-
-                <div class="kembalian">
-
-                    <span>
-                        Kembalian
-                    </span>
-
-                    <span id="kembalian">
-                        Rp 0
-                    </span>
-
-                </div>
-
-
-                <button
-                    class="btn-success"
-                    style="width:100%;"
-                    onclick="prosesPembayaran()"
-                >
-                    BAYAR
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-
-<!-- PRODUK -->
-
-<div
-    id="produk"
-    class="page"
->
-
-    <div class="card">
-
-        <h2>Produk</h2>
-
-        <p>
-            Kelola produk toko melalui halaman ini.
-        </p>
-
-        <button
-            class="btn-primary"
-            onclick="tampilkanFormProduk()"
-        >
-            + Tambah Produk
-        </button>
-
-    </div>
-
-
-    <!-- FORM TAMBAH PRODUK -->
-
-    <div
-        class="card"
-        id="formProduk"
-        style="display:none;"
-    >
-
-        <h2>Tambah Produk</h2>
-
-
-        <label>Kode Produk</label>
-
-        <input
-            type="text"
-            id="kodeProduk"
-            placeholder="Contoh: PRD001"
-        >
-
-
-        <label>Barcode</label>
-
-        <input
-            type="text"
-            id="barcodeProduk"
-            placeholder="Opsional"
-        >
-
-
-        <label>Nama Produk</label>
-
-        <input
-            type="text"
-            id="namaProdukBaru"
-            placeholder="Contoh: Indomie Goreng"
-        >
-
-
-        <label>Kategori</label>
-
-        <input
-            type="text"
-            id="kategoriProduk"
-            placeholder="Contoh: Makanan"
-        >
-
-
-        <label>Harga Beli</label>
-
-        <input
-            type="number"
-            id="hargaBeli"
-            placeholder="Contoh: 2500"
-        >
-
-
-        <label>Harga Jual</label>
-
-        <input
-            type="number"
-            id="hargaJual"
-            placeholder="Contoh: 3500"
-        >
-
-
-        <label>Stok Awal</label>
-
-        <input
-            type="number"
-            id="stokAwal"
-            value="0"
-            min="0"
-        >
-
-
-        <label>Stok Minimum</label>
-
-        <input
-            type="number"
-            id="stokMinimum"
-            value="5"
-            min="0"
-        >
-
-
-        <label>Satuan</label>
-
-        <select id="satuanProduk">
-
-            <option value="PCS">
-                PCS
-            </option>
-
-            <option value="BOX">
-                BOX
-            </option>
-
-            <option value="KG">
-                KG
-            </option>
-
-            <option value="LITER">
-                LITER
-            </option>
-
-            <option value="BOTOL">
-                BOTOL
-            </option>
-
-        </select>
-
-
-        <label>Status</label>
-
-        <select id="statusProduk">
-
-            <option value="Aktif">
-                Aktif
-            </option>
-
-            <option value="Nonaktif">
-                Nonaktif
-            </option>
-
-        </select>
-
-
-        <button
-            class="btn-primary"
-            onclick="simpanProduk()"
-        >
-            SIMPAN PRODUK
-        </button>
-
-
-        <button
-            onclick="tutupFormProduk()"
-            style="margin-top:10px;"
-        >
-            BATAL
-        </button>
-
-    </div>
-
-
-    <!-- DAFTAR PRODUK -->
-
-    <div class="card">
-
-        <h2>Daftar Produk</h2>
-
-        <div class="table-wrapper">
-
-            <table>
-
-                <thead>
-
-                    <tr>
-
-                        <th>Kode</th>
-                        <th>Barcode</th>
-                        <th>Nama</th>
-                        <th>Kategori</th>
-                        <th>Harga Jual</th>
-                        <th>Stok</th>
-                        <th>Satuan</th>
-                        <th>Status</th>
-
-                    </tr>
-
-                </thead>
-
-
-                <tbody id="daftarProduk">
-
-                    <tr>
-
-                        <td
-                            colspan="8"
-                            class="kosong"
-                        >
-                            Belum ada produk
-                        </td>
-
-                    </tr>
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-
-    <!-- STOK MASUK -->
-
-    <div
-        id="stokMasuk"
-        class="page"
-    >
-
-        <div class="card">
-
-            <h2>
-                Stok Masuk
-            </h2>
-
-            <p>
-                Fitur penerimaan barang dari supplier
-                akan kita aktifkan berikutnya.
-            </p>
-
-        </div>
-
-    </div>
-
-
-
-    <!-- STOK KELUAR -->
-
-    <div
-        id="stokKeluar"
-        class="page"
-    >
-
-        <div class="card">
-
-            <h2>
-                Stok Keluar
-            </h2>
-
-            <p>
-                Riwayat stok keluar akan muncul
-                di halaman ini.
-            </p>
-
-        </div>
-
-    </div>
-
-
-
-    <!-- TRANSAKSI -->
-
-    <div
-        id="transaksi"
-        class="page"
-    >
-
-        <div class="card">
-
-            <h2>
-                Riwayat Transaksi
-            </h2>
-
-            <p>
-                Riwayat transaksi akan kita
-                hubungkan ke Google Sheets.
-            </p>
-
-        </div>
-
-    </div>
-
-
-
-    <!-- PELANGGAN -->
-
-    <div
-        id="pelanggan"
-        class="page"
-    >
-
-        <div class="card">
-
-            <h2>
-                Pelanggan
-            </h2>
-
-            <p>
-                Database pelanggan/member
-                akan dibuat di tahap berikutnya.
-            </p>
-
-        </div>
-
-    </div>
-
-
-
-    <!-- PENGELUARAN -->
-
-    <div
-        id="pengeluaran"
-        class="page"
-    >
-
-        <div class="card">
-
-            <h2>
-                Pengeluaran
-            </h2>
-
-            <p>
-                Pengeluaran toko akan dicatat
-                melalui halaman ini.
-            </p>
-
-        </div>
-
-    </div>
-
-
-
-    <!-- LAPORAN -->
-
-    <div
-        id="laporan"
-        class="page"
-    >
-
-        <div class="card">
-
-            <h2>
-                Laporan
-            </h2>
-
-            <p>
-                Laporan omzet, HPP, laba,
-                dan stok akan kita buat berikutnya.
-            </p>
-
-        </div>
-
-    </div>
-
-
-
-    <!-- PENGATURAN -->
-
-    <div
-        id="pengaturan"
-        class="page"
-    >
-
-        <div class="card">
-
-            <h2>
-                Pengaturan
-            </h2>
-
-            <p>
-                Pengaturan toko, pajak, struk,
-                dan sistem akan dibuat berikutnya.
-            </p>
-
-        </div>
-
-    </div>
-
-
-</div>
-
-
-
-<script>
-
-
 /*
  * PINDAH HALAMAN
  */
@@ -1285,7 +202,7 @@ const SCRIPT_URL =
 
 
 /*
- * KIRIM TRANSAKSI
+ * KIRIM DATA KE GOOGLE SHEETS
  */
 
 function kirimKeGoogleSheets(
@@ -1344,6 +261,272 @@ function kirimKeGoogleSheets(
 
 
     form.remove();
+
+}
+
+
+
+/*
+ * FORM PRODUK
+ */
+
+function tampilkanFormProduk() {
+
+    document.getElementById(
+        "formProduk"
+    ).style.display =
+        "block";
+
+}
+
+
+function tutupFormProduk() {
+
+    document.getElementById(
+        "formProduk"
+    ).style.display =
+        "none";
+
+}
+
+
+
+/*
+ * SIMPAN PRODUK
+ */
+
+function simpanProduk() {
+
+    const kode =
+        document.getElementById(
+            "kodeProduk"
+        ).value.trim();
+
+
+    const barcode =
+        document.getElementById(
+            "barcodeProduk"
+        ).value.trim();
+
+
+    const nama =
+        document.getElementById(
+            "namaProdukBaru"
+        ).value.trim();
+
+
+    const kategori =
+        document.getElementById(
+            "kategoriProduk"
+        ).value.trim();
+
+
+    const hargaBeli =
+        Number(
+            document.getElementById(
+                "hargaBeli"
+            ).value
+        );
+
+
+    const hargaJual =
+        Number(
+            document.getElementById(
+                "hargaJual"
+            ).value
+        );
+
+
+    const stok =
+        Number(
+            document.getElementById(
+                "stokAwal"
+            ).value
+        );
+
+
+    const stokMinimum =
+        Number(
+            document.getElementById(
+                "stokMinimum"
+            ).value
+        );
+
+
+    const satuan =
+        document.getElementById(
+            "satuanProduk"
+        ).value;
+
+
+    const status =
+        document.getElementById(
+            "statusProduk"
+        ).value;
+
+
+    if (!kode) {
+
+        alert(
+            "Kode produk wajib diisi."
+        );
+
+        return;
+
+    }
+
+
+    if (!nama) {
+
+        alert(
+            "Nama produk wajib diisi."
+        );
+
+        return;
+
+    }
+
+
+    if (hargaJual <= 0) {
+
+        alert(
+            "Harga jual wajib diisi."
+        );
+
+        return;
+
+    }
+
+
+    if (hargaBeli < 0) {
+
+        alert(
+            "Harga beli tidak boleh kurang dari 0."
+        );
+
+        return;
+
+    }
+
+
+    if (stok < 0) {
+
+        alert(
+            "Stok tidak boleh kurang dari 0."
+        );
+
+        return;
+
+    }
+
+
+    const data = {
+
+        action:
+            "produk_tambah",
+
+        kodeProduk:
+            kode,
+
+        barcode:
+            barcode,
+
+        namaProduk:
+            nama,
+
+        kategori:
+            kategori,
+
+        hargaBeli:
+            hargaBeli,
+
+        hargaJual:
+            hargaJual,
+
+        stok:
+            stok,
+
+        stokMinimum:
+            stokMinimum,
+
+        satuan:
+            satuan,
+
+        status:
+            status
+
+    };
+
+
+    /*
+     * KIRIM KE GOOGLE SHEETS
+     */
+
+    kirimKeGoogleSheets(
+        data
+    );
+
+
+    alert(
+        "Produk berhasil dikirim ke Google Sheets."
+    );
+
+
+    /*
+     * RESET FORM
+     */
+
+    document.getElementById(
+        "kodeProduk"
+    ).value = "";
+
+
+    document.getElementById(
+        "barcodeProduk"
+    ).value = "";
+
+
+    document.getElementById(
+        "namaProdukBaru"
+    ).value = "";
+
+
+    document.getElementById(
+        "kategoriProduk"
+    ).value = "";
+
+
+    document.getElementById(
+        "hargaBeli"
+    ).value = "";
+
+
+    document.getElementById(
+        "hargaJual"
+    ).value = "";
+
+
+    document.getElementById(
+        "stokAwal"
+    ).value = "0";
+
+
+    document.getElementById(
+        "stokMinimum"
+    ).value = "5";
+
+
+    document.getElementById(
+        "satuanProduk"
+    ).value = "PCS";
+
+
+    document.getElementById(
+        "statusProduk"
+    ).value = "Aktif";
+
+
+    tutupFormProduk();
 
 }
 
@@ -1547,7 +730,6 @@ iframe.style.display =
 document.body.appendChild(
     iframe
 );
-
 </script>
 
 </body>
