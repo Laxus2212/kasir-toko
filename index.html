@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Kasir Toko</title>
 
     <style>
@@ -58,27 +59,21 @@
             margin-bottom: 15px;
         }
 
-        .form-group label {
+        label {
             display: block;
             margin-bottom: 6px;
             font-weight: bold;
             font-size: 14px;
         }
 
-        .form-group input,
-        .form-group select {
+        input,
+        select {
             width: 100%;
             padding: 12px;
             border: 1px solid #d1d5db;
             border-radius: 8px;
             font-size: 15px;
-            outline: none;
             background: white;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            border-color: #2563eb;
         }
 
         .btn {
@@ -96,8 +91,18 @@
             color: white;
         }
 
-        .btn-tambah:hover {
-            background: #1d4ed8;
+        .btn-bayar {
+            background: #16a34a;
+            color: white;
+        }
+
+        .btn-hapus {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 7px 10px;
+            border-radius: 6px;
+            cursor: pointer;
         }
 
         .table-wrapper {
@@ -121,13 +126,10 @@
             background: #f3f4f6;
         }
 
-        .btn-hapus {
-            background: #dc2626;
-            color: white;
-            border: none;
-            padding: 7px 10px;
-            border-radius: 6px;
-            cursor: pointer;
+        .kosong {
+            text-align: center;
+            padding: 25px;
+            color: #777;
         }
 
         .total-box {
@@ -139,10 +141,6 @@
             padding: 18px;
             border-radius: 10px;
             margin-top: 15px;
-        }
-
-        .total-box span:first-child {
-            font-size: 16px;
         }
 
         .total-box span:last-child {
@@ -167,21 +165,6 @@
             font-weight: bold;
         }
 
-        .btn-bayar {
-            background: #16a34a;
-            color: white;
-        }
-
-        .btn-bayar:hover {
-            background: #15803d;
-        }
-
-        .kosong {
-            text-align: center;
-            padding: 25px;
-            color: #777;
-        }
-
         @media (max-width: 600px) {
             .container {
                 width: 92%;
@@ -190,10 +173,6 @@
 
             .card {
                 padding: 15px;
-            }
-
-            .header h1 {
-                font-size: 21px;
             }
 
             th,
@@ -216,10 +195,12 @@
 
         <!-- TAMBAH PRODUK -->
         <div class="card">
+
             <h2>Tambah Produk</h2>
 
             <div class="form-group">
-                <label for="namaProduk">Nama Produk</label>
+                <label>Nama Produk</label>
+
                 <input
                     type="text"
                     id="namaProduk"
@@ -228,7 +209,8 @@
             </div>
 
             <div class="form-group">
-                <label for="hargaProduk">Harga</label>
+                <label>Harga</label>
+
                 <input
                     type="number"
                     id="hargaProduk"
@@ -237,7 +219,8 @@
             </div>
 
             <div class="form-group">
-                <label for="jumlahProduk">Jumlah</label>
+                <label>Jumlah</label>
+
                 <input
                     type="number"
                     id="jumlahProduk"
@@ -252,15 +235,21 @@
             >
                 + Tambah ke Keranjang
             </button>
+
         </div>
+
 
         <!-- KERANJANG -->
         <div class="card">
+
             <h2>Keranjang Belanja</h2>
 
             <div class="table-wrapper">
+
                 <table>
+
                     <thead>
+
                         <tr>
                             <th>No</th>
                             <th>Produk</th>
@@ -269,49 +258,72 @@
                             <th>Subtotal</th>
                             <th>Aksi</th>
                         </tr>
+
                     </thead>
 
                     <tbody id="keranjang">
+
                         <tr>
-                            <td colspan="6" class="kosong">
+                            <td
+                                colspan="6"
+                                class="kosong"
+                            >
                                 Belum ada produk
                             </td>
                         </tr>
+
                     </tbody>
+
                 </table>
+
             </div>
+
 
             <div class="total-box">
+
                 <span>TOTAL</span>
-                <span id="total">Rp 0</span>
+
+                <span id="total">
+                    Rp 0
+                </span>
+
             </div>
 
+
             <!-- PEMBAYARAN -->
+
             <div class="payment-box">
 
                 <h2>Pembayaran</h2>
 
                 <div class="form-group">
-                    <label for="metodePembayaran">
-                        Metode Pembayaran
-                    </label>
+
+                    <label>Metode Pembayaran</label>
 
                     <select
                         id="metodePembayaran"
                         onchange="ubahMetode()"
                     >
-                        <option value="cash">Cash</option>
-                        <option value="qris">QRIS</option>
+
+                        <option value="cash">
+                            Cash
+                        </option>
+
+                        <option value="qris">
+                            QRIS
+                        </option>
+
                     </select>
+
                 </div>
+
 
                 <div
                     class="form-group"
                     id="uangBayarBox"
                 >
-                    <label for="uangBayar">
-                        Uang Dibayar
-                    </label>
+
+                    <label>Uang Dibayar</label>
 
                     <input
                         type="number"
@@ -319,12 +331,20 @@
                         placeholder="Contoh: 50000"
                         oninput="hitungKembalian()"
                     >
+
                 </div>
 
+
                 <div class="change-box">
+
                     <span>Kembalian</span>
-                    <span id="kembalian">Rp 0</span>
+
+                    <span id="kembalian">
+                        Rp 0
+                    </span>
+
                 </div>
+
 
                 <button
                     class="btn btn-bayar"
@@ -334,143 +354,188 @@
                 </button>
 
             </div>
+
         </div>
 
     </div>
 
-    <script>
 
-        /*
-         * URL GOOGLE APPS SCRIPT
-         */
-        const SCRIPT_URL =
-            "https://script.google.com/macros/s/AKfycbxX9XqRImLGvvTosHjLYBS4G4HkZPwTb_XfKxiFNHxs83BSYkbm9XDz28gJ4huMsPML/exec";
+<script>
+
+    /*
+     * URL GOOGLE APPS SCRIPT
+     */
+
+    const SCRIPT_URL =
+        "https://script.google.com/macros/s/AKfycbxX9XqRImLGvvTosHjLYBS4G4HkZPwTb_XfKxiFNHxs83BSYkbm9XDz28gJ4huMsPML/exec";
 
 
-        let keranjang = [];
+    let keranjang = [];
 
 
-        function formatRupiah(angka) {
-            return new Intl.NumberFormat("id-ID", {
+    /*
+     * FORMAT RUPIAH
+     */
+
+    function formatRupiah(angka) {
+
+        return new Intl.NumberFormat(
+            "id-ID",
+            {
                 style: "currency",
                 currency: "IDR",
                 minimumFractionDigits: 0
-            }).format(angka);
-        }
+            }
+        ).format(angka);
+
+    }
 
 
-        function getTotal() {
+    /*
+     * TOTAL
+     */
 
-            return keranjang.reduce(function(total, produk) {
+    function getTotal() {
+
+        return keranjang.reduce(
+            function(total, produk) {
 
                 return total + produk.subtotal;
 
-            }, 0);
-        }
+            },
+            0
+        );
+
+    }
 
 
-        function tambahProduk() {
+    /*
+     * TAMBAH PRODUK
+     */
 
-            const nama = document
+    function tambahProduk() {
+
+        const nama =
+            document
                 .getElementById("namaProduk")
                 .value
                 .trim();
 
-            const harga = Number(
-                document.getElementById("hargaProduk").value
+
+        const harga =
+            Number(
+                document
+                    .getElementById("hargaProduk")
+                    .value
             );
 
-            const jumlah = Number(
-                document.getElementById("jumlahProduk").value
+
+        const jumlah =
+            Number(
+                document
+                    .getElementById("jumlahProduk")
+                    .value
             );
 
 
-            if (nama === "") {
+        if (!nama) {
 
-                alert("Nama produk harus diisi.");
+            alert("Nama produk harus diisi.");
 
-                return;
-            }
-
-
-            if (harga <= 0) {
-
-                alert("Harga produk harus diisi.");
-
-                return;
-            }
-
-
-            if (jumlah <= 0) {
-
-                alert("Jumlah produk harus lebih dari 0.");
-
-                return;
-            }
-
-
-            const subtotal = harga * jumlah;
-
-
-            keranjang.push({
-
-                nama: nama,
-
-                harga: harga,
-
-                jumlah: jumlah,
-
-                subtotal: subtotal
-
-            });
-
-
-            tampilkanKeranjang();
-
-
-            document.getElementById("namaProduk").value = "";
-
-            document.getElementById("hargaProduk").value = "";
-
-            document.getElementById("jumlahProduk").value = "1";
-
-
-            document.getElementById("namaProduk").focus();
+            return;
         }
 
 
-        function tampilkanKeranjang() {
+        if (harga <= 0) {
 
-            const tbody =
-                document.getElementById("keranjang");
+            alert("Harga produk harus diisi.");
 
-            const totalElement =
-                document.getElementById("total");
-
-
-            tbody.innerHTML = "";
+            return;
+        }
 
 
-            if (keranjang.length === 0) {
+        if (jumlah <= 0) {
 
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="6" class="kosong">
-                            Belum ada produk
-                        </td>
-                    </tr>
-                `;
+            alert("Jumlah produk harus lebih dari 0.");
 
-                totalElement.textContent = "Rp 0";
-
-                return;
-            }
+            return;
+        }
 
 
-            let total = 0;
+        keranjang.push({
+
+            nama: nama,
+
+            harga: harga,
+
+            jumlah: jumlah,
+
+            subtotal: harga * jumlah
+
+        });
 
 
-            keranjang.forEach(function(produk, index) {
+        tampilkanKeranjang();
+
+
+        document.getElementById(
+            "namaProduk"
+        ).value = "";
+
+
+        document.getElementById(
+            "hargaProduk"
+        ).value = "";
+
+
+        document.getElementById(
+            "jumlahProduk"
+        ).value = 1;
+
+    }
+
+
+    /*
+     * TAMPILKAN KERANJANG
+     */
+
+    function tampilkanKeranjang() {
+
+        const tbody =
+            document.getElementById(
+                "keranjang"
+            );
+
+
+        tbody.innerHTML = "";
+
+
+        if (keranjang.length === 0) {
+
+            tbody.innerHTML = `
+                <tr>
+                    <td
+                        colspan="6"
+                        class="kosong"
+                    >
+                        Belum ada produk
+                    </td>
+                </tr>
+            `;
+
+            document.getElementById(
+                "total"
+            ).textContent = "Rp 0";
+
+            return;
+        }
+
+
+        let total = 0;
+
+
+        keranjang.forEach(
+            function(produk, index) {
 
                 total += produk.subtotal;
 
@@ -490,7 +555,9 @@
                     </td>
 
                     <td>
-                        ${formatRupiah(produk.harga)}
+                        ${formatRupiah(
+                            produk.harga
+                        )}
                     </td>
 
                     <td>
@@ -498,7 +565,9 @@
                     </td>
 
                     <td>
-                        ${formatRupiah(produk.subtotal)}
+                        ${formatRupiah(
+                            produk.subtotal
+                        )}
                     </td>
 
                     <td>
@@ -511,87 +580,191 @@
                         </button>
 
                     </td>
-
                 `;
 
 
                 tbody.appendChild(row);
 
-            });
+            }
+        );
 
 
-            totalElement.textContent =
-                formatRupiah(total);
+        document.getElementById(
+            "total"
+        ).textContent =
+            formatRupiah(total);
 
 
-            hitungKembalian();
+        hitungKembalian();
+
+    }
+
+
+    /*
+     * HAPUS PRODUK
+     */
+
+    function hapusProduk(index) {
+
+        keranjang.splice(index, 1);
+
+        tampilkanKeranjang();
+
+    }
+
+
+    /*
+     * METODE PEMBAYARAN
+     */
+
+    function ubahMetode() {
+
+        const metode =
+            document.getElementById(
+                "metodePembayaran"
+            ).value;
+
+
+        const box =
+            document.getElementById(
+                "uangBayarBox"
+            );
+
+
+        if (metode === "qris") {
+
+            box.style.display = "none";
+
+            document.getElementById(
+                "uangBayar"
+            ).value = "";
+
+
+            document.getElementById(
+                "kembalian"
+            ).textContent = "Rp 0";
+
+        } else {
+
+            box.style.display = "block";
+
+        }
+
+    }
+
+
+    /*
+     * HITUNG KEMBALIAN
+     */
+
+    function hitungKembalian() {
+
+        const metode =
+            document.getElementById(
+                "metodePembayaran"
+            ).value;
+
+
+        if (metode === "qris") {
+            return;
         }
 
 
-        function hapusProduk(index) {
-
-            keranjang.splice(index, 1);
-
-            tampilkanKeranjang();
-        }
+        const total = getTotal();
 
 
-        function ubahMetode() {
-
-            const metode =
-                document.getElementById(
-                    "metodePembayaran"
-                ).value;
-
-
-            const uangBox =
-                document.getElementById(
-                    "uangBayarBox"
-                );
-
-
-            const uangBayar =
+        const uang =
+            Number(
                 document.getElementById(
                     "uangBayar"
-                );
+                ).value
+            );
 
 
-            if (metode === "qris") {
+        let kembalian =
+            uang - total;
 
-                uangBox.style.display = "none";
 
-                uangBayar.value = "";
-
-                document.getElementById(
-                    "kembalian"
-                ).textContent = "Rp 0";
-
-            } else {
-
-                uangBox.style.display = "block";
-
-            }
+        if (kembalian < 0) {
+            kembalian = 0;
         }
 
 
-        function hitungKembalian() {
+        document.getElementById(
+            "kembalian"
+        ).textContent =
+            formatRupiah(kembalian);
 
-            const metode =
-                document.getElementById(
-                    "metodePembayaran"
-                ).value;
+    }
 
 
-            if (metode === "qris") {
+    /*
+     * SIMPAN SATU PRODUK
+     *
+     * Menggunakan URLSearchParams
+     * supaya Google Apps Script
+     * menerima request dengan stabil.
+     */
 
-                return;
+    function kirimData(data) {
+
+        const body =
+            new URLSearchParams();
+
+
+        body.append(
+            "data",
+            JSON.stringify(data)
+        );
+
+
+        return fetch(
+            SCRIPT_URL,
+            {
+                method: "POST",
+
+                body: body
             }
+        );
+
+    }
 
 
-            const total = getTotal();
+    /*
+     * PROSES PEMBAYARAN
+     */
+
+    async function prosesPembayaran() {
+
+        if (keranjang.length === 0) {
+
+            alert(
+                "Keranjang masih kosong."
+            );
+
+            return;
+        }
 
 
-            const uangBayar =
+        const metode =
+            document.getElementById(
+                "metodePembayaran"
+            ).value;
+
+
+        const total = getTotal();
+
+
+        /*
+         * VALIDASI CASH
+         */
+
+        let uangBayar = 0;
+
+
+        if (metode === "cash") {
+
+            uangBayar =
                 Number(
                     document.getElementById(
                         "uangBayar"
@@ -599,32 +772,61 @@
                 );
 
 
-            let kembalian =
-                uangBayar - total;
+            if (uangBayar <= 0) {
 
+                alert(
+                    "Masukkan uang pembayaran."
+                );
 
-            if (kembalian < 0) {
-
-                kembalian = 0;
+                return;
             }
 
 
-            document.getElementById(
-                "kembalian"
-            ).textContent =
-                formatRupiah(kembalian);
+            if (uangBayar < total) {
+
+                alert(
+                    "Uang pembayaran kurang " +
+                    formatRupiah(
+                        total - uangBayar
+                    )
+                );
+
+                return;
+            }
+
         }
 
 
         /*
-         * KIRIM TRANSAKSI KE GOOGLE SHEETS
+         * BUAT ID TRANSAKSI
          */
-        async function simpanKeGoogleSheets(
-            idTransaksi,
-            metode,
-            tanggal,
-            jam
-        ) {
+
+        const sekarang =
+            new Date();
+
+
+        const idTransaksi =
+            "TRX-" +
+            sekarang.getTime();
+
+
+        const tanggal =
+            sekarang.toLocaleDateString(
+                "id-ID"
+            );
+
+
+        const jam =
+            sekarang.toLocaleTimeString(
+                "id-ID"
+            );
+
+
+        /*
+         * KIRIM SEMUA PRODUK
+         */
+
+        try {
 
             for (
                 const produk of keranjang
@@ -651,195 +853,71 @@
                         produk.subtotal,
 
                     metode:
-                        metode
+                        metode.toUpperCase()
+
                 };
 
 
-                try {
+                await kirimData(data);
 
-                    await fetch(
-                        SCRIPT_URL,
-                        {
-
-                            method: "POST",
-
-                            mode: "no-cors",
-
-                            headers: {
-                                "Content-Type":
-                                    "text/plain"
-                            },
-
-                            body:
-                                JSON.stringify(data)
-
-                        }
-                    );
-
-                } catch (error) {
-
-                    console.error(
-                        "Gagal mengirim data:",
-                        error
-                    );
-
-                }
-            }
-        }
-
-
-        async function prosesPembayaran() {
-
-            if (keranjang.length === 0) {
-
-                alert(
-                    "Keranjang masih kosong."
-                );
-
-                return;
             }
 
 
-            const metode =
-                document.getElementById(
-                    "metodePembayaran"
-                ).value;
+            /*
+             * PEMBAYARAN BERHASIL
+             */
+
+            let pesan =
+                "PEMBAYARAN BERHASIL!\n\n";
 
 
-            const total = getTotal();
+            pesan +=
+                "ID Transaksi: " +
+                idTransaksi +
+                "\n";
+
+
+            pesan +=
+                "Total: " +
+                formatRupiah(total) +
+                "\n";
 
 
             if (metode === "cash") {
-
-                const uangBayar =
-                    Number(
-                        document.getElementById(
-                            "uangBayar"
-                        ).value
-                    );
-
-
-                if (uangBayar <= 0) {
-
-                    alert(
-                        "Masukkan uang pembayaran."
-                    );
-
-                    return;
-                }
-
-
-                if (uangBayar < total) {
-
-                    alert(
-                        "Uang pembayaran masih kurang " +
-                        formatRupiah(
-                            total - uangBayar
-                        )
-                    );
-
-                    return;
-                }
-
-            }
-
-
-            /*
-             * BUAT ID TRANSAKSI
-             */
-            const sekarang =
-                new Date();
-
-
-            const idTransaksi =
-                "TRX-" +
-                sekarang.getTime();
-
-
-            /*
-             * TANGGAL
-             */
-            const tanggal =
-                sekarang.toLocaleDateString(
-                    "id-ID"
-                );
-
-
-            /*
-             * JAM
-             */
-            const jam =
-                sekarang.toLocaleTimeString(
-                    "id-ID"
-                );
-
-
-            /*
-             * SIMPAN KE GOOGLE SHEETS
-             */
-            await simpanKeGoogleSheets(
-                idTransaksi,
-                metode.toUpperCase(),
-                tanggal,
-                jam
-            );
-
-
-            /*
-             * TAMPILKAN HASIL PEMBAYARAN
-             */
-            if (metode === "cash") {
-
-                const uangBayar =
-                    Number(
-                        document.getElementById(
-                            "uangBayar"
-                        ).value
-                    );
-
 
                 const kembalian =
                     uangBayar - total;
 
 
-                alert(
+                pesan +=
+                    "Dibayar: " +
+                    formatRupiah(
+                        uangBayar
+                    ) +
+                    "\n";
 
-                    "PEMBAYARAN BERHASIL!\n\n" +
 
-                    "ID Transaksi: " +
-                    idTransaksi +
-
-                    "\nTotal: " +
-                    formatRupiah(total) +
-
-                    "\nDibayar: " +
-                    formatRupiah(uangBayar) +
-
-                    "\nKembalian: " +
-                    formatRupiah(kembalian)
-
-                );
+                pesan +=
+                    "Kembalian: " +
+                    formatRupiah(
+                        kembalian
+                    );
 
             } else {
 
-                alert(
-
-                    "PEMBAYARAN QRIS BERHASIL!\n\n" +
-
-                    "ID Transaksi: " +
-                    idTransaksi +
-
-                    "\nTotal: " +
-                    formatRupiah(total)
-
-                );
+                pesan +=
+                    "Metode: QRIS";
 
             }
 
 
+            alert(pesan);
+
+
             /*
-             * KOSONGKAN KERANJANG
+             * KOSONGKAN
              */
+
             keranjang = [];
 
 
@@ -855,9 +933,22 @@
 
 
             tampilkanKeranjang();
+
+
+        } catch (error) {
+
+            console.error(error);
+
+
+            alert(
+                "Terjadi masalah saat mengirim transaksi."
+            );
+
         }
 
-    </script>
+    }
+
+</script>
 
 </body>
 </html>
