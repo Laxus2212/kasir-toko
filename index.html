@@ -684,35 +684,226 @@
 
 
 
-    <!-- PRODUK -->
+<!-- PRODUK -->
+
+<div
+    id="produk"
+    class="page"
+>
+
+    <div class="card">
+
+        <h2>Produk</h2>
+
+        <p>
+            Kelola produk toko melalui halaman ini.
+        </p>
+
+        <button
+            class="btn-primary"
+            onclick="tampilkanFormProduk()"
+        >
+            + Tambah Produk
+        </button>
+
+    </div>
+
+
+    <!-- FORM TAMBAH PRODUK -->
 
     <div
-        id="produk"
-        class="page"
+        class="card"
+        id="formProduk"
+        style="display:none;"
     >
 
-        <div class="card">
+        <h2>Tambah Produk</h2>
 
-            <h2>
-                Produk
-            </h2>
 
-            <p>
-                Di halaman ini nanti kita bisa
-                menambah, mengubah, mencari,
-                dan mengatur produk.
-            </p>
+        <label>Kode Produk</label>
 
-            <button
-                class="btn-primary"
-                onclick="alert('Fitur tambah produk akan kita aktifkan pada tahap berikutnya.')"
-            >
-                + Tambah Produk
-            </button>
+        <input
+            type="text"
+            id="kodeProduk"
+            placeholder="Contoh: PRD001"
+        >
+
+
+        <label>Barcode</label>
+
+        <input
+            type="text"
+            id="barcodeProduk"
+            placeholder="Opsional"
+        >
+
+
+        <label>Nama Produk</label>
+
+        <input
+            type="text"
+            id="namaProdukBaru"
+            placeholder="Contoh: Indomie Goreng"
+        >
+
+
+        <label>Kategori</label>
+
+        <input
+            type="text"
+            id="kategoriProduk"
+            placeholder="Contoh: Makanan"
+        >
+
+
+        <label>Harga Beli</label>
+
+        <input
+            type="number"
+            id="hargaBeli"
+            placeholder="Contoh: 2500"
+        >
+
+
+        <label>Harga Jual</label>
+
+        <input
+            type="number"
+            id="hargaJual"
+            placeholder="Contoh: 3500"
+        >
+
+
+        <label>Stok Awal</label>
+
+        <input
+            type="number"
+            id="stokAwal"
+            value="0"
+            min="0"
+        >
+
+
+        <label>Stok Minimum</label>
+
+        <input
+            type="number"
+            id="stokMinimum"
+            value="5"
+            min="0"
+        >
+
+
+        <label>Satuan</label>
+
+        <select id="satuanProduk">
+
+            <option value="PCS">
+                PCS
+            </option>
+
+            <option value="BOX">
+                BOX
+            </option>
+
+            <option value="KG">
+                KG
+            </option>
+
+            <option value="LITER">
+                LITER
+            </option>
+
+            <option value="BOTOL">
+                BOTOL
+            </option>
+
+        </select>
+
+
+        <label>Status</label>
+
+        <select id="statusProduk">
+
+            <option value="Aktif">
+                Aktif
+            </option>
+
+            <option value="Nonaktif">
+                Nonaktif
+            </option>
+
+        </select>
+
+
+        <button
+            class="btn-primary"
+            onclick="simpanProduk()"
+        >
+            SIMPAN PRODUK
+        </button>
+
+
+        <button
+            onclick="tutupFormProduk()"
+            style="margin-top:10px;"
+        >
+            BATAL
+        </button>
+
+    </div>
+
+
+    <!-- DAFTAR PRODUK -->
+
+    <div class="card">
+
+        <h2>Daftar Produk</h2>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Kode</th>
+                        <th>Barcode</th>
+                        <th>Nama</th>
+                        <th>Kategori</th>
+                        <th>Harga Jual</th>
+                        <th>Stok</th>
+                        <th>Satuan</th>
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="daftarProduk">
+
+                    <tr>
+
+                        <td
+                            colspan="8"
+                            class="kosong"
+                        >
+                            Belum ada produk
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
 
         </div>
 
     </div>
+
+</div>
 
 
 
