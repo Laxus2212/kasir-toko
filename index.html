@@ -3,297 +3,1323 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kasir</title>
+
+    <title>POS Kasir</title>
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
-            background: #f5f5f5;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6f9;
+            color: #222;
         }
 
-        h1, h2, h3 {
-            margin-top: 0;
-        }
+        /* =========================
+           LAYOUT
+        ========================= */
 
-        .menu {
+        .app {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 240px;
+            background: #111827;
+            color: white;
+            padding: 20px 14px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            padding: 10px 12px 25px;
+        }
+
+        .logo small {
+            display: block;
+            font-size: 12px;
+            font-weight: normal;
+            color: #9ca3af;
+            margin-top: 5px;
         }
 
         .menu-btn {
-            padding: 10px 18px;
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: transparent;
+            color: #d1d5db;
             border: none;
-            border-radius: 6px;
+            padding: 13px 14px;
+            margin-bottom: 5px;
+            border-radius: 8px;
             cursor: pointer;
-            background: #ddd;
+            font-size: 14px;
         }
 
-        .menu-btn.active {
-            background: #222;
+        .menu-btn:hover {
+            background: #1f2937;
             color: white;
         }
 
+        .menu-btn.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .content {
+            margin-left: 240px;
+            width: calc(100% - 240px);
+            padding: 25px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .topbar h1 {
+            margin: 0;
+            font-size: 25px;
+        }
+
+        .tanggal {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        /* =========================
+           PAGE
+        ========================= */
+
         .page {
             display: none;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
         }
 
         .page.active {
             display: block;
         }
 
-        button {
-            padding: 10px 16px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            margin: 3px;
+        /* =========================
+           DASHBOARD
+        ========================= */
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
         }
 
-        .btn-tambah {
-            background: #222;
-            color: white;
-        }
-
-        table {
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-
-        .form-produk {
-            display: none;
-            margin-top: 20px;
+        .card {
+            background: white;
             padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            background: #fafafa;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,.06);
         }
 
-        .form-produk input,
-        .form-produk select,
-        #metodePembayaran,
-        #uangBayar {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 10px;
+        .card-title {
+            color: #6b7280;
+            font-size: 13px;
             margin-bottom: 10px;
         }
 
-        .btn-simpan {
+        .card-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        /* =========================
+           PANEL
+        ========================= */
+
+        .panel {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,.06);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .panel-header h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        /* =========================
+           KASIR
+        ========================= */
+
+        .kasir-layout {
+            display: grid;
+            grid-template-columns: 1.7fr 1fr;
+            gap: 20px;
+        }
+
+        .produk-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .produk-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 15px;
+            background: white;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .produk-card:hover {
+            border-color: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        .produk-card h3 {
+            margin: 0 0 8px;
+            font-size: 15px;
+        }
+
+        .produk-harga {
+            color: #2563eb;
+            font-weight: bold;
+        }
+
+        .produk-stok {
+            color: #6b7280;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .keranjang-box {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,.06);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 11px 8px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        th {
+            background: #f9fafb;
+        }
+
+        .total-box {
+            display: flex;
+            justify-content: space-between;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 20px 0;
+            padding-top: 15px;
+            border-top: 2px solid #eee;
+        }
+
+        /* =========================
+           BUTTON
+        ========================= */
+
+        button {
+            border: none;
+            border-radius: 7px;
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-success {
             background: #198754;
             color: white;
         }
 
-        .btn-batal {
+        .btn-danger {
             background: #dc3545;
             color: white;
         }
 
-        .btn-bayar {
-            background: #0d6efd;
+        .btn-secondary {
+            background: #6b7280;
             color: white;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        /* =========================
+           FORM
+        ========================= */
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            margin-bottom: 6px;
+            color: #374151;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #d1d5db;
+            border-radius: 7px;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #2563eb;
+        }
+
+        .form-actions {
+            margin-top: 20px;
+        }
+
+        /* =========================
+           SEARCH
+        ========================= */
+
+        .search-box {
+            margin-bottom: 15px;
+        }
+
+        /* =========================
+           STATUS
+        ========================= */
+
+        .badge {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+        }
+
+        .badge-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1000px) {
+
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .kasir-layout,
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .produk-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                width: 190px;
+            }
+
+            .content {
+                margin-left: 190px;
+                width: calc(100% - 190px);
+                padding: 15px;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .produk-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <h1 id="judulHalaman">Kasir</h1>
+<div class="app">
 
-    <div class="menu">
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            POS KASIR
+            <small>Point of Sale System</small>
+        </div>
+
         <button
             class="menu-btn active"
+            onclick="bukaHalaman('dashboard', this)"
+        >
+            🏠 Dashboard
+        </button>
+
+        <button
+            class="menu-btn"
             onclick="bukaHalaman('kasir', this)"
         >
-            Kasir
+            🛒 Kasir
         </button>
 
         <button
             class="menu-btn"
             onclick="bukaHalaman('produk', this)"
         >
-            Produk
-        </button>
-    </div>
-
-
-    <div id="kasir" class="page active">
-
-        <h2>Kasir</h2>
-
-        <button
-            class="btn-tambah"
-            onclick="tampilkanFormProduk()"
-        >
-            + Tambah Produk
-        </button>
-
-        <h3>Keranjang</h3>
-
-        <table border="1" width="100%">
-            <thead>
-                <tr>
-                    <th>Produk</th>
-                    <th>Jumlah</th>
-                    <th>Subtotal</th>
-                </tr>
-            </thead>
-
-            <tbody id="keranjang">
-                <tr>
-                    <td colspan="3" class="kosong">
-                        Keranjang kosong
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <h3>
-            Total:
-            <span id="total">Rp 0</span>
-        </h3>
-
-        <hr>
-
-        <h3>Pembayaran</h3>
-
-        <select id="metodePembayaran">
-            <option value="cash">Cash</option>
-            <option value="qris">QRIS</option>
-        </select>
-
-        <input
-            type="number"
-            id="uangBayar"
-            placeholder="Uang pembayaran"
-        >
-
-        <p>
-            Kembalian:
-            <span id="kembalian">Rp 0</span>
-        </p>
-
-        <button
-            class="btn-bayar"
-            onclick="prosesPembayaran()"
-        >
-            Proses Pembayaran
-        </button>
-
-    </div>
-
-
-    <div id="produk" class="page">
-
-        <h2>Produk</h2>
-
-        <button
-            class="btn-tambah"
-            onclick="tampilkanFormProduk()"
-        >
-            + Tambah Produk
-        </button>
-
-    </div>
-
-
-    <div
-        id="formProduk"
-        class="form-produk"
-    >
-
-        <h2>Tambah Produk</h2>
-
-        <input
-            type="text"
-            id="kodeProduk"
-            placeholder="Kode Produk"
-        >
-
-        <input
-            type="text"
-            id="barcodeProduk"
-            placeholder="Barcode"
-        >
-
-        <input
-            type="text"
-            id="namaProdukBaru"
-            placeholder="Nama Produk"
-        >
-
-        <input
-            type="text"
-            id="kategoriProduk"
-            placeholder="Kategori"
-        >
-
-        <input
-            type="number"
-            id="hargaBeli"
-            placeholder="Harga Beli"
-        >
-
-        <input
-            type="number"
-            id="hargaJual"
-            placeholder="Harga Jual"
-        >
-
-        <input
-            type="number"
-            id="stokAwal"
-            value="0"
-            placeholder="Stok Awal"
-        >
-
-        <input
-            type="number"
-            id="stokMinimum"
-            value="5"
-            placeholder="Stok Minimum"
-        >
-
-        <select id="satuanProduk">
-            <option value="PCS">PCS</option>
-            <option value="BOX">BOX</option>
-            <option value="KG">KG</option>
-            <option value="LITER">LITER</option>
-        </select>
-
-        <select id="statusProduk">
-            <option value="Aktif">Aktif</option>
-            <option value="Tidak Aktif">Tidak Aktif</option>
-        </select>
-
-        <button
-            class="btn-simpan"
-            onclick="simpanProduk()"
-        >
-            Simpan Produk
+            📦 Produk
         </button>
 
         <button
-            class="btn-batal"
-            onclick="tutupFormProduk()"
+            class="menu-btn"
+            onclick="bukaHalaman('stok', this)"
         >
-            Batal
+            📊 Stok
         </button>
 
-    </div>
+        <button
+            class="menu-btn"
+            onclick="bukaHalaman('pelanggan', this)"
+        >
+            👥 Pelanggan
+        </button>
+
+        <button
+            class="menu-btn"
+            onclick="bukaHalaman('transaksi', this)"
+        >
+            🧾 Transaksi
+        </button>
+
+        <button
+            class="menu-btn"
+            onclick="bukaHalaman('laporan', this)"
+        >
+            📈 Laporan
+        </button>
+
+    </aside>
 
 
-    <script src="script.js"></script>
+    <!-- =========================
+         CONTENT
+    ========================== -->
+
+    <main class="content">
+
+        <div class="topbar">
+
+            <h1 id="judulHalaman">
+                Dashboard
+            </h1>
+
+            <div class="tanggal">
+                POS Kasir
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             DASHBOARD
+        ========================== -->
+
+        <section
+            id="dashboard"
+            class="page active"
+        >
+
+            <div class="cards">
+
+                <div class="card">
+                    <div class="card-title">
+                        Penjualan Hari Ini
+                    </div>
+
+                    <div class="card-value">
+                        Rp 0
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">
+                        Transaksi Hari Ini
+                    </div>
+
+                    <div class="card-value">
+                        0
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">
+                        Total Produk
+                    </div>
+
+                    <div class="card-value">
+                        0
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">
+                        Stok Menipis
+                    </div>
+
+                    <div class="card-value">
+                        0
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="dashboard-grid">
+
+                <div class="panel">
+
+                    <div class="panel-header">
+                        <h2>
+                            Transaksi Terbaru
+                        </h2>
+                    </div>
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>ID Transaksi</th>
+                                <th>Tanggal</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+                                <td colspan="4">
+                                    Belum ada transaksi.
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <div class="panel-header">
+                        <h2>
+                            Stok Menipis
+                        </h2>
+                    </div>
+
+                    <p>
+                        Belum ada data stok menipis.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             KASIR
+        ========================== -->
+
+        <section
+            id="kasir"
+            class="page"
+        >
+
+            <div class="kasir-layout">
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <h2>
+                            Pilih Produk
+                        </h2>
+
+                        <button
+                            class="btn-primary"
+                            onclick="tampilkanFormProduk()"
+                        >
+                            + Tambah Produk
+                        </button>
+
+                    </div>
+
+
+                    <div class="search-box">
+
+                        <input
+                            type="text"
+                            placeholder="Cari produk..."
+                        >
+
+                    </div>
+
+
+                    <div class="produk-grid">
+
+                        <div class="produk-card">
+
+                            <h3>
+                                Contoh Produk
+                            </h3>
+
+                            <div class="produk-harga">
+                                Rp 0
+                            </div>
+
+                            <div class="produk-stok">
+                                Stok: 0
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="keranjang-box">
+
+                    <h2>
+                        Keranjang
+                    </h2>
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Produk</th>
+                                <th>Qty</th>
+                                <th>Subtotal</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="keranjang">
+
+                            <tr>
+                                <td
+                                    colspan="3"
+                                    class="kosong"
+                                >
+                                    Keranjang kosong
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+
+                    <div class="total-box">
+
+                        <span>
+                            Total
+                        </span>
+
+                        <span id="total">
+                            Rp 0
+                        </span>
+
+                    </div>
+
+
+                    <select id="metodePembayaran">
+
+                        <option value="cash">
+                            Cash
+                        </option>
+
+                        <option value="qris">
+                            QRIS
+                        </option>
+
+                    </select>
+
+
+                    <br><br>
+
+
+                    <input
+                        type="number"
+                        id="uangBayar"
+                        placeholder="Uang pembayaran"
+                    >
+
+
+                    <p>
+                        Kembalian:
+                        <strong id="kembalian">
+                            Rp 0
+                        </strong>
+                    </p>
+
+
+                    <button
+                        class="btn-success"
+                        onclick="prosesPembayaran()"
+                    >
+                        Proses Pembayaran
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             PRODUK
+        ========================== -->
+
+        <section
+            id="produk"
+            class="page"
+        >
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <h2>
+                        Data Produk
+                    </h2>
+
+                    <button
+                        class="btn-primary"
+                        onclick="tampilkanFormProduk()"
+                    >
+                        + Tambah Produk
+                    </button>
+
+                </div>
+
+
+                <input
+                    type="text"
+                    placeholder="Cari kode / nama produk..."
+                >
+
+
+                <br><br>
+
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Kode</th>
+                            <th>Nama Produk</th>
+                            <th>Kategori</th>
+                            <th>Harga Beli</th>
+                            <th>Harga Jual</th>
+                            <th>Stok</th>
+                            <th>Status</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td colspan="7">
+                                Belum ada data produk.
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- FORM TAMBAH PRODUK -->
+
+            <div
+                id="formProduk"
+                class="panel"
+                style="display:none;"
+            >
+
+                <h2>
+                    Tambah Produk
+                </h2>
+
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label>
+                            Kode Produk
+                        </label>
+
+                        <input
+                            type="text"
+                            id="kodeProduk"
+                            placeholder="Contoh: BRG001"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Barcode
+                        </label>
+
+                        <input
+                            type="text"
+                            id="barcodeProduk"
+                            placeholder="Barcode"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Nama Produk
+                        </label>
+
+                        <input
+                            type="text"
+                            id="namaProdukBaru"
+                            placeholder="Nama produk"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Kategori
+                        </label>
+
+                        <input
+                            type="text"
+                            id="kategoriProduk"
+                            placeholder="Kategori"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Harga Beli
+                        </label>
+
+                        <input
+                            type="number"
+                            id="hargaBeli"
+                            placeholder="0"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Harga Jual
+                        </label>
+
+                        <input
+                            type="number"
+                            id="hargaJual"
+                            placeholder="0"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Stok Awal
+                        </label>
+
+                        <input
+                            type="number"
+                            id="stokAwal"
+                            value="0"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Stok Minimum
+                        </label>
+
+                        <input
+                            type="number"
+                            id="stokMinimum"
+                            value="5"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Satuan
+                        </label>
+
+                        <select id="satuanProduk">
+
+                            <option value="PCS">
+                                PCS
+                            </option>
+
+                            <option value="BOX">
+                                BOX
+                            </option>
+
+                            <option value="KG">
+                                KG
+                            </option>
+
+                            <option value="LITER">
+                                LITER
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Status
+                        </label>
+
+                        <select id="statusProduk">
+
+                            <option value="Aktif">
+                                Aktif
+                            </option>
+
+                            <option value="Tidak Aktif">
+                                Tidak Aktif
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-actions">
+
+                    <button
+                        class="btn-success"
+                        onclick="simpanProduk()"
+                    >
+                        Simpan Produk
+                    </button>
+
+                    <button
+                        class="btn-danger"
+                        onclick="tutupFormProduk()"
+                    >
+                        Batal
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             STOK
+        ========================== -->
+
+        <section
+            id="stok"
+            class="page"
+        >
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <h2>
+                        Manajemen Stok
+                    </h2>
+
+                </div>
+
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Kode</th>
+                            <th>Produk</th>
+                            <th>Stok</th>
+                            <th>Minimum</th>
+                            <th>Status</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td colspan="5">
+                                Belum ada data stok.
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             PELANGGAN
+        ========================== -->
+
+        <section
+            id="pelanggan"
+            class="page"
+        >
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <h2>
+                        Data Pelanggan
+                    </h2>
+
+                    <button class="btn-primary">
+                        + Tambah Pelanggan
+                    </button>
+
+                </div>
+
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>ID</th>
+                            <th>Nama</th>
+                            <th>No. HP</th>
+                            <th>Alamat</th>
+                            <th>Total Transaksi</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td colspan="5">
+                                Belum ada data pelanggan.
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             TRANSAKSI
+        ========================== -->
+
+        <section
+            id="transaksi"
+            class="page"
+        >
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <h2>
+                        Riwayat Transaksi
+                    </h2>
+
+                </div>
+
+
+                <input
+                    type="text"
+                    placeholder="Cari ID transaksi..."
+                >
+
+
+                <br><br>
+
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>ID Transaksi</th>
+                            <th>Tanggal</th>
+                            <th>Jam</th>
+                            <th>Total</th>
+                            <th>Metode</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td colspan="5">
+                                Belum ada transaksi.
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             LAPORAN
+        ========================== -->
+
+        <section
+            id="laporan"
+            class="page"
+        >
+
+            <div class="cards">
+
+                <div class="card">
+
+                    <div class="card-title">
+                        Penjualan Hari Ini
+                    </div>
+
+                    <div class="card-value">
+                        Rp 0
+                    </div>
+
+                </div>
+
+
+                <div class="card">
+
+                    <div class="card-title">
+                        Penjualan Bulan Ini
+                    </div>
+
+                    <div class="card-value">
+                        Rp 0
+                    </div>
+
+                </div>
+
+
+                <div class="card">
+
+                    <div class="card-title">
+                        Jumlah Transaksi
+                    </div>
+
+                    <div class="card-value">
+                        0
+                    </div>
+
+                </div>
+
+
+                <div class="card">
+
+                    <div class="card-title">
+                        Produk Terjual
+                    </div>
+
+                    <div class="card-value">
+                        0
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="panel">
+
+                <h2>
+                    Laporan Penjualan
+                </h2>
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Tanggal</th>
+                            <th>Transaksi</th>
+                            <th>Penjualan</th>
+                            <th>Metode</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td colspan="4">
+                                Belum ada laporan.
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- =========================
+     IFRAME
+========================= -->
+
+<iframe
+    name="kirimFrame"
+    style="display:none;"
+></iframe>
+
+
+<!-- =========================
+     JAVASCRIPT
+========================= -->
+
+<script src="script.js"></script>
 
 </body>
 </html>
