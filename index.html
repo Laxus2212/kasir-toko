@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kasir Toko</title>
+
+    <title>POS Kasir Toko</title>
 
     <style>
+
         * {
             box-sizing: border-box;
             font-family: Arial, sans-serif;
@@ -17,30 +19,131 @@
             color: #222;
         }
 
-        .header {
-            background: #1f2937;
+        /* SIDEBAR */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 240px;
+            background: #111827;
             color: white;
-            padding: 20px;
-            text-align: center;
+            padding: 20px 12px;
+            overflow-y: auto;
         }
 
-        .container {
-            width: 95%;
-            max-width: 1100px;
-            margin: 25px auto;
+        .logo {
+            text-align: center;
+            margin-bottom: 25px;
         }
+
+        .logo h2 {
+            margin: 0;
+        }
+
+        .logo p {
+            margin: 5px 0 0;
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        .menu-btn {
+            width: 100%;
+            padding: 13px 15px;
+            margin-bottom: 6px;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: #d1d5db;
+            text-align: left;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .menu-btn:hover,
+        .menu-btn.active {
+            background: #2563eb;
+            color: white;
+        }
+
+
+        /* CONTENT */
+
+        .main {
+            margin-left: 240px;
+            padding: 25px;
+        }
+
+        .topbar {
+            background: white;
+            padding: 18px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 12px rgba(0,0,0,.06);
+        }
+
+        .topbar h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .topbar p {
+            margin: 5px 0 0;
+            color: #6b7280;
+        }
+
+
+        /* PAGE */
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+
+        /* CARD */
 
         .card {
             background: white;
             padding: 20px;
             margin-bottom: 20px;
             border-radius: 12px;
-            box-shadow: 0 3px 12px rgba(0,0,0,.08);
+            box-shadow: 0 3px 12px rgba(0,0,0,.06);
         }
 
-        h2 {
-            margin-top: 0;
+
+        /* DASHBOARD */
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
         }
+
+        .stat {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,.06);
+        }
+
+        .stat-title {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .stat-value {
+            margin-top: 10px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+
+        /* FORM */
 
         label {
             display: block;
@@ -48,7 +151,8 @@
             font-weight: bold;
         }
 
-        input, select {
+        input,
+        select {
             width: 100%;
             padding: 12px;
             margin-bottom: 15px;
@@ -60,28 +164,28 @@
         button {
             border: none;
             border-radius: 8px;
-            padding: 13px;
+            padding: 12px 15px;
             cursor: pointer;
             font-weight: bold;
         }
 
-        .btn-tambah {
-            width: 100%;
+        .btn-primary {
             background: #2563eb;
             color: white;
         }
 
-        .btn-bayar {
-            width: 100%;
+        .btn-success {
             background: #16a34a;
             color: white;
         }
 
-        .btn-hapus {
+        .btn-danger {
             background: #dc2626;
             color: white;
-            padding: 7px 10px;
         }
+
+
+        /* TABLE */
 
         .table-wrapper {
             overflow-x: auto;
@@ -92,9 +196,10 @@
             border-collapse: collapse;
         }
 
-        th, td {
+        th,
+        td {
             padding: 12px;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #e5e7eb;
             text-align: left;
         }
 
@@ -102,26 +207,35 @@
             background: #f3f4f6;
         }
 
-        .total {
-            margin-top: 15px;
-            padding: 18px;
+
+        /* KASIR */
+
+        .kasir-grid {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 20px;
+        }
+
+        .total-box {
             background: #111827;
             color: white;
+            padding: 20px;
             border-radius: 10px;
             display: flex;
             justify-content: space-between;
             font-size: 20px;
             font-weight: bold;
+            margin-top: 15px;
         }
 
         .kembalian {
-            margin-bottom: 15px;
-            padding: 15px;
             background: #ecfdf5;
             color: #065f46;
+            padding: 15px;
             border-radius: 8px;
             display: flex;
             justify-content: space-between;
+            margin-bottom: 15px;
             font-weight: bold;
         }
 
@@ -131,325 +245,824 @@
             padding: 20px;
         }
 
-        #kirimForm {
-            display: none;
+
+        /* MOBILE */
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                width: 200px;
+            }
+
+            .main {
+                margin-left: 200px;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .kasir-grid {
+                grid-template-columns: 1fr;
+            }
+
         }
+
+
+        @media (max-width: 650px) {
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 15px;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
     </style>
 </head>
 
+
 <body>
 
-<div class="header">
-    <h1>KASIR TOKO</h1>
-    <p>Sistem Kasir Sederhana</p>
-</div>
 
-<div class="container">
+<!-- SIDEBAR -->
 
-    <div class="card">
+<div class="sidebar">
 
-        <h2>Tambah Produk</h2>
+    <div class="logo">
 
-        <label>Nama Produk</label>
-        <input
-            type="text"
-            id="namaProduk"
-            placeholder="Contoh: Indomie"
-        >
+        <h2>POS TOKO</h2>
 
-        <label>Harga</label>
-        <input
-            type="number"
-            id="hargaProduk"
-            placeholder="Contoh: 3500"
-        >
-
-        <label>Jumlah</label>
-        <input
-            type="number"
-            id="jumlahProduk"
-            value="1"
-            min="1"
-        >
-
-        <button
-            class="btn-tambah"
-            onclick="tambahProduk()"
-        >
-            + Tambah ke Keranjang
-        </button>
+        <p>Sistem Kasir</p>
 
     </div>
 
 
-    <div class="card">
-
-        <h2>Keranjang Belanja</h2>
-
-        <div class="table-wrapper">
-
-            <table>
-
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Produk</th>
-                        <th>Harga</th>
-                        <th>Jumlah</th>
-                        <th>Subtotal</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-
-                <tbody id="keranjang">
-
-                    <tr>
-                        <td colspan="6" class="kosong">
-                            Belum ada produk
-                        </td>
-                    </tr>
-
-                </tbody>
-
-            </table>
-
-        </div>
+    <button
+        class="menu-btn active"
+        onclick="bukaHalaman('dashboard', this)"
+    >
+        🏠 Dashboard
+    </button>
 
 
-        <div class="total">
-            <span>TOTAL</span>
-            <span id="total">Rp 0</span>
-        </div>
+    <button
+        class="menu-btn"
+        onclick="bukaHalaman('kasir', this)"
+    >
+        🛒 Kasir
+    </button>
 
 
-        <br>
+    <button
+        class="menu-btn"
+        onclick="bukaHalaman('produk', this)"
+    >
+        📦 Produk
+    </button>
 
 
-        <h2>Pembayaran</h2>
-
-        <label>Metode Pembayaran</label>
-
-        <select
-            id="metodePembayaran"
-            onchange="ubahMetode()"
-        >
-            <option value="cash">Cash</option>
-            <option value="qris">QRIS</option>
-        </select>
+    <button
+        class="menu-btn"
+        onclick="bukaHalaman('stokMasuk', this)"
+    >
+        📥 Stok Masuk
+    </button>
 
 
-        <div id="uangBayarBox">
-
-            <label>Uang Dibayar</label>
-
-            <input
-                type="number"
-                id="uangBayar"
-                placeholder="Contoh: 10000"
-                oninput="hitungKembalian()"
-            >
-
-        </div>
+    <button
+        class="menu-btn"
+        onclick="bukaHalaman('stokKeluar', this)"
+    >
+        📤 Stok Keluar
+    </button>
 
 
-        <div class="kembalian">
-
-            <span>Kembalian</span>
-
-            <span id="kembalian">
-                Rp 0
-            </span>
-
-        </div>
+    <button
+        class="menu-btn"
+        onclick="bukaHalaman('transaksi', this)"
+    >
+        🧾 Transaksi
+    </button>
 
 
-        <button
-            class="btn-bayar"
-            onclick="prosesPembayaran()"
-        >
-            BAYAR
-        </button>
+    <button
+        class="menu-btn"
+        onclick="bukaHalaman('pelanggan', this)"
+    >
+        👥 Pelanggan
+    </button>
 
-    </div>
+
+    <button
+        class="menu-btn"
+        onclick="bukaHalaman('pengeluaran', this)"
+    >
+        💰 Pengeluaran
+    </button>
+
+
+    <button
+        class="menu-btn"
+        onclick="bukaHalaman('laporan', this)"
+    >
+        📊 Laporan
+    </button>
+
+
+    <button
+        class="menu-btn"
+        onclick="bukaHalaman('pengaturan', this)"
+    >
+        ⚙️ Pengaturan
+    </button>
 
 </div>
 
 
-<!-- FORM KHUSUS KIRIM KE GOOGLE APPS SCRIPT -->
 
-<form
-    id="kirimForm"
-    method="POST"
-    target="kirimFrame"
-    action="https://script.google.com/macros/s/AKfycbxX9XqRImLGvvTosHjLYBS4G4HkZPwTb_XfKxiFNHxs83BSYkbm9XDz28gJ4huMsPML/exec"
->
+<!-- MAIN -->
 
-    <input
-        type="hidden"
-        name="data"
-        id="dataKirim"
+<div class="main">
+
+
+    <div class="topbar">
+
+        <h1 id="judulHalaman">
+            Dashboard
+        </h1>
+
+        <p>
+            Sistem Point of Sale Toko
+        </p>
+
+    </div>
+
+
+
+    <!-- DASHBOARD -->
+
+    <div
+        id="dashboard"
+        class="page active"
     >
 
-</form>
+        <div class="dashboard-grid">
+
+            <div class="stat">
+
+                <div class="stat-title">
+                    Omzet Hari Ini
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="dashboardOmzet"
+                >
+                    Rp 0
+                </div>
+
+            </div>
 
 
-<iframe
-    name="kirimFrame"
-    id="kirimFrame"
-    style="display:none;"
-></iframe>
+            <div class="stat">
+
+                <div class="stat-title">
+                    Transaksi
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="dashboardTransaksi"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-title">
+                    Produk Terjual
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="dashboardProduk"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-title">
+                    Stok Menipis
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="dashboardStok"
+                >
+                    0
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h2>
+                Selamat Datang di POS Toko
+            </h2>
+
+            <p>
+                Sistem kasir sedang dikembangkan
+                menjadi POS lengkap.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- KASIR -->
+
+    <div
+        id="kasir"
+        class="page"
+    >
+
+        <div class="kasir-grid">
+
+
+            <div class="card">
+
+                <h2>
+                    Kasir
+                </h2>
+
+
+                <label>
+                    Cari Produk
+                </label>
+
+                <input
+                    type="text"
+                    id="cariProduk"
+                    placeholder="Ketik nama atau barcode produk..."
+                >
+
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Produk</th>
+                                <th>Harga</th>
+                                <th>Stok</th>
+                                <th>Aksi</th>
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="daftarProdukKasir">
+
+                            <tr>
+
+                                <td
+                                    colspan="4"
+                                    class="kosong"
+                                >
+                                    Produk akan muncul di sini
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="card">
+
+                <h2>
+                    Keranjang
+                </h2>
+
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Produk</th>
+                                <th>Qty</th>
+                                <th>Total</th>
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="keranjang">
+
+                            <tr>
+
+                                <td
+                                    colspan="3"
+                                    class="kosong"
+                                >
+                                    Keranjang kosong
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <div class="total-box">
+
+                    <span>
+                        TOTAL
+                    </span>
+
+                    <span id="total">
+                        Rp 0
+                    </span>
+
+                </div>
+
+
+                <br>
+
+
+                <label>
+                    Metode Pembayaran
+                </label>
+
+                <select id="metodePembayaran">
+
+                    <option value="cash">
+                        Cash
+                    </option>
+
+                    <option value="qris">
+                        QRIS
+                    </option>
+
+                </select>
+
+
+                <label>
+                    Uang Dibayar
+                </label>
+
+                <input
+                    type="number"
+                    id="uangBayar"
+                    placeholder="Masukkan uang..."
+                >
+
+
+                <div class="kembalian">
+
+                    <span>
+                        Kembalian
+                    </span>
+
+                    <span id="kembalian">
+                        Rp 0
+                    </span>
+
+                </div>
+
+
+                <button
+                    class="btn-success"
+                    style="width:100%;"
+                    onclick="prosesPembayaran()"
+                >
+                    BAYAR
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- PRODUK -->
+
+    <div
+        id="produk"
+        class="page"
+    >
+
+        <div class="card">
+
+            <h2>
+                Produk
+            </h2>
+
+            <p>
+                Di halaman ini nanti kita bisa
+                menambah, mengubah, mencari,
+                dan mengatur produk.
+            </p>
+
+            <button
+                class="btn-primary"
+                onclick="alert('Fitur tambah produk akan kita aktifkan pada tahap berikutnya.')"
+            >
+                + Tambah Produk
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- STOK MASUK -->
+
+    <div
+        id="stokMasuk"
+        class="page"
+    >
+
+        <div class="card">
+
+            <h2>
+                Stok Masuk
+            </h2>
+
+            <p>
+                Fitur penerimaan barang dari supplier
+                akan kita aktifkan berikutnya.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- STOK KELUAR -->
+
+    <div
+        id="stokKeluar"
+        class="page"
+    >
+
+        <div class="card">
+
+            <h2>
+                Stok Keluar
+            </h2>
+
+            <p>
+                Riwayat stok keluar akan muncul
+                di halaman ini.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- TRANSAKSI -->
+
+    <div
+        id="transaksi"
+        class="page"
+    >
+
+        <div class="card">
+
+            <h2>
+                Riwayat Transaksi
+            </h2>
+
+            <p>
+                Riwayat transaksi akan kita
+                hubungkan ke Google Sheets.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- PELANGGAN -->
+
+    <div
+        id="pelanggan"
+        class="page"
+    >
+
+        <div class="card">
+
+            <h2>
+                Pelanggan
+            </h2>
+
+            <p>
+                Database pelanggan/member
+                akan dibuat di tahap berikutnya.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- PENGELUARAN -->
+
+    <div
+        id="pengeluaran"
+        class="page"
+    >
+
+        <div class="card">
+
+            <h2>
+                Pengeluaran
+            </h2>
+
+            <p>
+                Pengeluaran toko akan dicatat
+                melalui halaman ini.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- LAPORAN -->
+
+    <div
+        id="laporan"
+        class="page"
+    >
+
+        <div class="card">
+
+            <h2>
+                Laporan
+            </h2>
+
+            <p>
+                Laporan omzet, HPP, laba,
+                dan stok akan kita buat berikutnya.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- PENGATURAN -->
+
+    <div
+        id="pengaturan"
+        class="page"
+    >
+
+        <div class="card">
+
+            <h2>
+                Pengaturan
+            </h2>
+
+            <p>
+                Pengaturan toko, pajak, struk,
+                dan sistem akan dibuat berikutnya.
+            </p>
+
+        </div>
+
+    </div>
+
+
+</div>
+
 
 
 <script>
 
-const SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbxX9XqRImLGvvTosHjLYBS4G4HkZPwTb_XfKxiFNHxs83BSYkbm9XDz28gJ4huMsPML/exec";
+
+/*
+ * PINDAH HALAMAN
+ */
+
+function bukaHalaman(
+    namaHalaman,
+    tombol
+) {
+
+    const semuaHalaman =
+        document.querySelectorAll(
+            ".page"
+        );
 
 
-let keranjang = [];
+    semuaHalaman.forEach(
+        function(halaman) {
+
+            halaman.classList.remove(
+                "active"
+            );
+
+        }
+    );
 
 
-function formatRupiah(angka) {
+    document.getElementById(
+        namaHalaman
+    ).classList.add(
+        "active"
+    );
 
-    return new Intl.NumberFormat("id-ID", {
-        style: "currency",
-        currency: "IDR",
-        minimumFractionDigits: 0
-    }).format(angka);
+
+    const semuaTombol =
+        document.querySelectorAll(
+            ".menu-btn"
+        );
+
+
+    semuaTombol.forEach(
+        function(btn) {
+
+            btn.classList.remove(
+                "active"
+            );
+
+        }
+    );
+
+
+    tombol.classList.add(
+        "active"
+    );
+
+
+    const judul =
+        tombol.textContent.trim();
+
+
+    document.getElementById(
+        "judulHalaman"
+    ).textContent =
+        judul;
 
 }
 
 
+
+/*
+ * FORMAT RUPIAH
+ */
+
+function formatRupiah(
+    angka
+) {
+
+    return new Intl.NumberFormat(
+        "id-ID",
+        {
+            style: "currency",
+            currency: "IDR",
+            minimumFractionDigits: 0
+        }
+    ).format(angka);
+
+}
+
+
+
+/*
+ * DATA KERANJANG
+ */
+
+let keranjang = [];
+
+
+
+/*
+ * TOTAL
+ */
+
 function getTotal() {
 
     return keranjang.reduce(
-        (total, produk) =>
-            total + produk.subtotal,
+        function(total, produk) {
+
+            return total +
+                produk.subtotal;
+
+        },
         0
     );
 
 }
 
 
-function tambahProduk() {
 
-    const nama =
-        document.getElementById("namaProduk").value.trim();
-
-    const harga =
-        Number(
-            document.getElementById("hargaProduk").value
-        );
-
-    const jumlah =
-        Number(
-            document.getElementById("jumlahProduk").value
-        );
-
-
-    if (!nama) {
-
-        alert("Nama produk harus diisi.");
-        return;
-
-    }
-
-
-    if (harga <= 0) {
-
-        alert("Harga produk harus diisi.");
-        return;
-
-    }
-
-
-    if (jumlah <= 0) {
-
-        alert("Jumlah produk harus lebih dari 0.");
-        return;
-
-    }
-
-
-    keranjang.push({
-
-        nama: nama,
-
-        harga: harga,
-
-        jumlah: jumlah,
-
-        subtotal: harga * jumlah
-
-    });
-
-
-    tampilkanKeranjang();
-
-
-    document.getElementById("namaProduk").value = "";
-    document.getElementById("hargaProduk").value = "";
-    document.getElementById("jumlahProduk").value = "1";
-
-}
-
+/*
+ * TAMPILKAN KERANJANG
+ */
 
 function tampilkanKeranjang() {
 
     const tbody =
-        document.getElementById("keranjang");
+        document.getElementById(
+            "keranjang"
+        );
+
 
     tbody.innerHTML = "";
 
 
-    if (keranjang.length === 0) {
+    if (
+        keranjang.length === 0
+    ) {
 
         tbody.innerHTML = `
+
             <tr>
-                <td colspan="6" class="kosong">
-                    Belum ada produk
+
+                <td
+                    colspan="3"
+                    class="kosong"
+                >
+                    Keranjang kosong
                 </td>
+
             </tr>
+
         `;
-
-        document.getElementById("total").textContent =
-            "Rp 0";
-
-        return;
 
     }
 
 
     keranjang.forEach(
-        (produk, index) => {
+        function(produk) {
 
             tbody.innerHTML += `
 
                 <tr>
 
-                    <td>${index + 1}</td>
-
-                    <td>${produk.nama}</td>
-
                     <td>
-                        ${formatRupiah(produk.harga)}
-                    </td>
-
-                    <td>${produk.jumlah}</td>
-
-                    <td>
-                        ${formatRupiah(produk.subtotal)}
+                        ${produk.nama}
                     </td>
 
                     <td>
+                        ${produk.jumlah}
+                    </td>
 
-                        <button
-                            class="btn-hapus"
-                            onclick="hapusProduk(${index})"
-                        >
-                            Hapus
-                        </button>
-
+                    <td>
+                        ${formatRupiah(
+                            produk.subtotal
+                        )}
                     </td>
 
                 </tr>
@@ -460,115 +1073,89 @@ function tampilkanKeranjang() {
     );
 
 
-    document.getElementById("total").textContent =
-        formatRupiah(getTotal());
-
-
-    hitungKembalian();
-
-}
-
-
-function hapusProduk(index) {
-
-    keranjang.splice(index, 1);
-
-    tampilkanKeranjang();
-
-}
-
-
-function ubahMetode() {
-
-    const metode =
-        document.getElementById(
-            "metodePembayaran"
-        ).value;
-
-
-    const box =
-        document.getElementById(
-            "uangBayarBox"
-        );
-
-
-    if (metode === "qris") {
-
-        box.style.display = "none";
-
-        document.getElementById(
-            "uangBayar"
-        ).value = "";
-
-        document.getElementById(
-            "kembalian"
-        ).textContent = "Rp 0";
-
-    } else {
-
-        box.style.display = "block";
-
-    }
-
-}
-
-
-function hitungKembalian() {
-
-    const metode =
-        document.getElementById(
-            "metodePembayaran"
-        ).value;
-
-
-    if (metode === "qris") {
-        return;
-    }
-
-
-    const total = getTotal();
-
-
-    const uang =
-        Number(
-            document.getElementById(
-                "uangBayar"
-            ).value
-        );
-
-
-    let kembali = uang - total;
-
-
-    if (kembali < 0) {
-        kembali = 0;
-    }
-
-
     document.getElementById(
-        "kembalian"
+        "total"
     ).textContent =
-        formatRupiah(kembali);
+        formatRupiah(
+            getTotal()
+        );
 
 }
+
 
 
 /*
- * KIRIM KE GOOGLE SHEETS
+ * GOOGLE APPS SCRIPT
  */
 
-function kirimKeGoogleSheets(data) {
-
-    document.getElementById(
-        "dataKirim"
-    ).value = JSON.stringify(data);
+const SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbxX9XqRImLGvvTosHjLYBS4G4HkZPwTb_XfKxiFNHxs83BSYkbm9XDz28gJ4huMsPML/exec";
 
 
-    document.getElementById(
-        "kirimForm"
-    ).submit();
+
+/*
+ * KIRIM TRANSAKSI
+ */
+
+function kirimKeGoogleSheets(
+    data
+) {
+
+    const form =
+        document.createElement(
+            "form"
+        );
+
+
+    form.method =
+        "POST";
+
+
+    form.target =
+        "kirimFrame";
+
+
+    form.action =
+        SCRIPT_URL;
+
+
+    const input =
+        document.createElement(
+            "input"
+        );
+
+
+    input.type =
+        "hidden";
+
+
+    input.name =
+        "data";
+
+
+    input.value =
+        JSON.stringify(
+            data
+        );
+
+
+    form.appendChild(
+        input
+    );
+
+
+    document.body.appendChild(
+        form
+    );
+
+
+    form.submit();
+
+
+    form.remove();
 
 }
+
 
 
 /*
@@ -577,9 +1164,13 @@ function kirimKeGoogleSheets(data) {
 
 function prosesPembayaran() {
 
-    if (keranjang.length === 0) {
+    if (
+        keranjang.length === 0
+    ) {
 
-        alert("Keranjang masih kosong.");
+        alert(
+            "Keranjang masih kosong."
+        );
 
         return;
 
@@ -592,13 +1183,16 @@ function prosesPembayaran() {
         ).value;
 
 
-    const total = getTotal();
+    const total =
+        getTotal();
 
 
     let uangBayar = 0;
 
 
-    if (metode === "cash") {
+    if (
+        metode === "cash"
+    ) {
 
         uangBayar =
             Number(
@@ -608,24 +1202,12 @@ function prosesPembayaran() {
             );
 
 
-        if (uangBayar <= 0) {
+        if (
+            uangBayar < total
+        ) {
 
             alert(
-                "Masukkan uang pembayaran."
-            );
-
-            return;
-
-        }
-
-
-        if (uangBayar < total) {
-
-            alert(
-                "Uang pembayaran kurang " +
-                formatRupiah(
-                    total - uangBayar
-                )
+                "Uang pembayaran kurang."
             );
 
             return;
@@ -635,7 +1217,8 @@ function prosesPembayaran() {
     }
 
 
-    const sekarang = new Date();
+    const sekarang =
+        new Date();
 
 
     const idTransaksi =
@@ -654,10 +1237,6 @@ function prosesPembayaran() {
             "id-ID"
         );
 
-
-    /*
-     * KIRIM SETIAP PRODUK
-     */
 
     keranjang.forEach(
         function(produk) {
@@ -688,15 +1267,13 @@ function prosesPembayaran() {
             };
 
 
-            kirimKeGoogleSheets(data);
+            kirimKeGoogleSheets(
+                data
+            );
 
         }
     );
 
-
-    /*
-     * TAMPILKAN SUKSES
-     */
 
     let pesan =
         "PEMBAYARAN BERHASIL!\n\n";
@@ -710,20 +1287,17 @@ function prosesPembayaran() {
 
     pesan +=
         "Total: " +
-        formatRupiah(total) +
-        "\n";
+        formatRupiah(
+            total
+        );
 
 
-    if (metode === "cash") {
-
-        pesan +=
-            "Dibayar: " +
-            formatRupiah(uangBayar) +
-            "\n";
-
+    if (
+        metode === "cash"
+    ) {
 
         pesan +=
-            "Kembalian: " +
+            "\nKembalian: " +
             formatRupiah(
                 uangBayar - total
             );
@@ -731,12 +1305,14 @@ function prosesPembayaran() {
     } else {
 
         pesan +=
-            "Metode: QRIS";
+            "\nMetode: QRIS";
 
     }
 
 
-    alert(pesan);
+    alert(
+        pesan
+    );
 
 
     keranjang = [];
@@ -749,12 +1325,37 @@ function prosesPembayaran() {
 
     document.getElementById(
         "kembalian"
-    ).textContent = "Rp 0";
+    ).textContent =
+        "Rp 0";
 
 
     tampilkanKeranjang();
 
 }
+
+
+
+/*
+ * IFRAME UNTUK KIRIM DATA
+ */
+
+const iframe =
+    document.createElement(
+        "iframe"
+    );
+
+
+iframe.name =
+    "kirimFrame";
+
+
+iframe.style.display =
+    "none";
+
+
+document.body.appendChild(
+    iframe
+);
 
 </script>
 
