@@ -3,14 +3,384 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kasir</title>
+
+    <title>Kasir Toko</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6f8;
+            color: #222;
+        }
+
+        .header {
+            background: #1f2937;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1100px;
+            margin: 25px auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .card h2 {
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #2563eb;
+        }
+
+        .btn {
+            width: 100%;
+            border: none;
+            padding: 13px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .btn-tambah {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-tambah:hover {
+            background: #1d4ed8;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        th {
+            background: #f3f4f6;
+        }
+
+        .btn-hapus {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 7px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .total-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #111827;
+            color: white;
+            padding: 18px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .total-box span:first-child {
+            font-size: 16px;
+        }
+
+        .total-box span:last-child {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .kosong {
+            text-align: center;
+            padding: 25px;
+            color: #777;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: 92%;
+                margin: 15px auto;
+            }
+
+            .card {
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 21px;
+            }
+
+            th,
+            td {
+                padding: 9px;
+                font-size: 13px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-    <h1>Sistem Kasir</h1>
+    <div class="header">
+        <h1>KASIR TOKO</h1>
+        <p>Sistem Kasir Sederhana</p>
+    </div>
 
-    <p>Website kasir berhasil terhubung.</p>
+    <div class="container">
+
+        <!-- FORM PRODUK -->
+        <div class="card">
+            <h2>Tambah Produk</h2>
+
+            <div class="form-group">
+                <label for="namaProduk">Nama Produk</label>
+                <input
+                    type="text"
+                    id="namaProduk"
+                    placeholder="Contoh: Indomie Goreng"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="hargaProduk">Harga</label>
+                <input
+                    type="number"
+                    id="hargaProduk"
+                    placeholder="Contoh: 3500"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="jumlahProduk">Jumlah</label>
+                <input
+                    type="number"
+                    id="jumlahProduk"
+                    value="1"
+                    min="1"
+                >
+            </div>
+
+            <button
+                class="btn btn-tambah"
+                onclick="tambahProduk()"
+            >
+                + Tambah ke Keranjang
+            </button>
+        </div>
+
+        <!-- KERANJANG -->
+        <div class="card">
+            <h2>Keranjang Belanja</h2>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Produk</th>
+                            <th>Harga</th>
+                            <th>Jumlah</th>
+                            <th>Subtotal</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="keranjang">
+                        <tr>
+                            <td colspan="6" class="kosong">
+                                Belum ada produk
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="total-box">
+                <span>TOTAL</span>
+                <span id="total">Rp 0</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+
+        let keranjang = [];
+
+        function formatRupiah(angka) {
+            return new Intl.NumberFormat("id-ID", {
+                style: "currency",
+                currency: "IDR",
+                minimumFractionDigits: 0
+            }).format(angka);
+        }
+
+        function tambahProduk() {
+
+            const nama = document.getElementById("namaProduk").value.trim();
+            const harga = Number(
+                document.getElementById("hargaProduk").value
+            );
+            const jumlah = Number(
+                document.getElementById("jumlahProduk").value
+            );
+
+            if (nama === "") {
+                alert("Nama produk harus diisi.");
+                return;
+            }
+
+            if (harga <= 0) {
+                alert("Harga produk harus diisi.");
+                return;
+            }
+
+            if (jumlah <= 0) {
+                alert("Jumlah produk harus lebih dari 0.");
+                return;
+            }
+
+            const subtotal = harga * jumlah;
+
+            keranjang.push({
+                nama: nama,
+                harga: harga,
+                jumlah: jumlah,
+                subtotal: subtotal
+            });
+
+            tampilkanKeranjang();
+
+            document.getElementById("namaProduk").value = "";
+            document.getElementById("hargaProduk").value = "";
+            document.getElementById("jumlahProduk").value = "1";
+
+            document.getElementById("namaProduk").focus();
+        }
+
+        function tampilkanKeranjang() {
+
+            const tbody = document.getElementById("keranjang");
+            const totalElement = document.getElementById("total");
+
+            tbody.innerHTML = "";
+
+            if (keranjang.length === 0) {
+
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="kosong">
+                            Belum ada produk
+                        </td>
+                    </tr>
+                `;
+
+                totalElement.textContent = "Rp 0";
+
+                return;
+            }
+
+            let total = 0;
+
+            keranjang.forEach((produk, index) => {
+
+                total += produk.subtotal;
+
+                const row = document.createElement("tr");
+
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+
+                    <td>${produk.nama}</td>
+
+                    <td>${formatRupiah(produk.harga)}</td>
+
+                    <td>${produk.jumlah}</td>
+
+                    <td>${formatRupiah(produk.subtotal)}</td>
+
+                    <td>
+                        <button
+                            class="btn-hapus"
+                            onclick="hapusProduk(${index})"
+                        >
+                            Hapus
+                        </button>
+                    </td>
+                `;
+
+                tbody.appendChild(row);
+            });
+
+            totalElement.textContent = formatRupiah(total);
+        }
+
+        function hapusProduk(index) {
+
+            keranjang.splice(index, 1);
+
+            tampilkanKeranjang();
+        }
+
+    </script>
 
 </body>
 </html>
