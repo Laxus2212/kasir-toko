@@ -93,6 +93,28 @@ function bukaHalaman(namaHalaman, tombol) {
 
 
 /*
+ * Saat membuka Produk
+ */
+
+if (namaHalaman === "produk") {
+
+    tampilkanProduk();
+
+}
+
+
+/*
+ * Saat membuka Kasir
+ */
+
+if (namaHalaman === "kasir") {
+
+    tampilkanProdukKasir();
+
+}
+
+
+/*
  * Saat membuka Stok
  */
 
@@ -101,9 +123,6 @@ if (namaHalaman === "stok") {
     tampilkanStok();
 
 }
-
-}
-
 
 /*
  * ==========================================
@@ -221,16 +240,16 @@ tampilkanStok();
 
 /*
  * ==========================================
- * TAMPILKAN STOK
+ * TAMPILKAN PRODUK
  * ==========================================
  */
 
-function tampilkanStok() {
+function tampilkanProduk() {
 
-    const tabelStok =
-        document.getElementById("tabelStok");
+    const tabelProduk =
+        document.getElementById("tabelProduk");
 
-    if (!tabelStok) {
+    if (!tabelProduk) {
         return;
     }
 
@@ -239,10 +258,10 @@ function tampilkanStok() {
         daftarProduk.length === 0
     ) {
 
-        tabelStok.innerHTML = `
+        tabelProduk.innerHTML = `
             <tr>
-                <td colspan="5">
-                    Belum ada data stok.
+                <td colspan="10">
+                    Belum ada data produk.
                 </td>
             </tr>
         `;
@@ -250,28 +269,35 @@ function tampilkanStok() {
         return;
     }
 
-    tabelStok.innerHTML = "";
+    tabelProduk.innerHTML = "";
 
     daftarProduk.forEach(function(produk) {
 
-        let status = "Aman";
-
-        if (
-            Number(produk.stok) <=
-            Number(produk.stokMinimum)
-        ) {
-            status = "Stok Menipis";
-        }
-
-        tabelStok.innerHTML += `
+        tabelProduk.innerHTML += `
             <tr>
 
                 <td>
-                    ${produk.kode || "-"}
+                    ${escapeHtml(produk.kode)}
                 </td>
 
                 <td>
-                    ${produk.nama || "-"}
+                    ${escapeHtml(produk.barcode)}
+                </td>
+
+                <td>
+                    ${escapeHtml(produk.nama)}
+                </td>
+
+                <td>
+                    ${escapeHtml(produk.kategori)}
+                </td>
+
+                <td>
+                    ${formatRupiah(produk.hargaBeli)}
+                </td>
+
+                <td>
+                    ${formatRupiah(produk.hargaJual)}
                 </td>
 
                 <td>
@@ -283,7 +309,11 @@ function tampilkanStok() {
                 </td>
 
                 <td>
-                    ${status}
+                    ${escapeHtml(produk.satuan)}
+                </td>
+
+                <td>
+                    ${escapeHtml(produk.status)}
                 </td>
 
             </tr>
