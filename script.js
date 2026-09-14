@@ -240,16 +240,16 @@ tampilkanStok();
 
 /*
  * ==========================================
- * TAMPILKAN PRODUK
+ * TAMPILKAN STOK
  * ==========================================
  */
 
-function tampilkanProduk() {
+function tampilkanStok() {
 
-    const tabelProduk =
-        document.getElementById("tabelProduk");
+    const tabelStok =
+        document.getElementById("tabelStok");
 
-    if (!tabelProduk) {
+    if (!tabelStok) {
         return;
     }
 
@@ -258,10 +258,10 @@ function tampilkanProduk() {
         daftarProduk.length === 0
     ) {
 
-        tabelProduk.innerHTML = `
+        tabelStok.innerHTML = `
             <tr>
-                <td colspan="10">
-                    Belum ada data produk.
+                <td colspan="5">
+                    Belum ada data stok.
                 </td>
             </tr>
         `;
@@ -269,35 +269,28 @@ function tampilkanProduk() {
         return;
     }
 
-    tabelProduk.innerHTML = "";
+    tabelStok.innerHTML = "";
 
     daftarProduk.forEach(function(produk) {
 
-        tabelProduk.innerHTML += `
+        let status = "Aman";
+
+        if (
+            Number(produk.stok) <=
+            Number(produk.stokMinimum)
+        ) {
+            status = "Stok Menipis";
+        }
+
+        tabelStok.innerHTML += `
             <tr>
 
                 <td>
-                    ${escapeHtml(produk.kode)}
+                    ${produk.kode || "-"}
                 </td>
 
                 <td>
-                    ${escapeHtml(produk.barcode)}
-                </td>
-
-                <td>
-                    ${escapeHtml(produk.nama)}
-                </td>
-
-                <td>
-                    ${escapeHtml(produk.kategori)}
-                </td>
-
-                <td>
-                    ${formatRupiah(produk.hargaBeli)}
-                </td>
-
-                <td>
-                    ${formatRupiah(produk.hargaJual)}
+                    ${produk.nama || "-"}
                 </td>
 
                 <td>
@@ -309,11 +302,7 @@ function tampilkanProduk() {
                 </td>
 
                 <td>
-                    ${escapeHtml(produk.satuan)}
-                </td>
-
-                <td>
-                    ${escapeHtml(produk.status)}
+                    ${status}
                 </td>
 
             </tr>
@@ -328,7 +317,10 @@ function tampilkanProduk() {
  * ==========================================
  * TAMPILKAN PRODUK DI KASIR
  * ==========================================
- *
+ */
+
+
+/*
  * LOGIKA:
  *
  * Search kosong
