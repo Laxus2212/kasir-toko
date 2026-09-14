@@ -30,9 +30,7 @@ function bukaHalaman(namaHalaman, tombol) {
         document.querySelectorAll(".page");
 
     semuaHalaman.forEach(function(halaman) {
-
         halaman.classList.remove("active");
-
     });
 
 
@@ -40,9 +38,7 @@ function bukaHalaman(namaHalaman, tombol) {
         document.getElementById(namaHalaman);
 
     if (halaman) {
-
         halaman.classList.add("active");
-
     }
 
 
@@ -50,9 +46,7 @@ function bukaHalaman(namaHalaman, tombol) {
         document.querySelectorAll(".menu-btn");
 
     semuaTombol.forEach(function(btn) {
-
         btn.classList.remove("active");
-
     });
 
 
@@ -60,67 +54,38 @@ function bukaHalaman(namaHalaman, tombol) {
 
         tombol.classList.add("active");
 
-
         const judul =
             tombol.textContent.trim();
-
 
         const judulHalaman =
             document.getElementById(
                 "judulHalaman"
             );
 
-
         if (judulHalaman) {
-
             judulHalaman.textContent =
                 judul;
-
         }
 
     }
 
 
     /*
-     * Saat membuka Produk
+     * Saat membuka Kasir
      */
 
     if (namaHalaman === "kasir") {
-
-    tampilkanProdukKasir();
-
-}
+        tampilkanProdukKasir();
+    }
 
 
-/*
- * Saat membuka Produk
- */
+    /*
+     * Saat membuka Stok
+     */
 
-if (namaHalaman === "produk") {
-
-    tampilkanProduk();
-
-}
-
-
-/*
- * Saat membuka Kasir
- */
-
-if (namaHalaman === "kasir") {
-
-    tampilkanProdukKasir();
-
-}
-
-
-/*
- * Saat membuka Stok
- */
-
-if (namaHalaman === "stok") {
-
-    tampilkanStok();
+    if (namaHalaman === "stok") {
+        tampilkanStok();
+    }
 
 }
 
