@@ -581,6 +581,181 @@
                 grid-template-columns: 1fr;
             }
         }
+/* =========================
+   KASIR - UI PRO
+========================= */
+
+.kasir-layout {
+    display: grid;
+    grid-template-columns: 1.7fr 1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+.kasir-layout .panel,
+.keranjang-box {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 0 6px 24px rgba(0,0,0,.06);
+}
+
+.kasir-layout .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.kasir-layout .panel-header h2,
+.keranjang-box h2 {
+    margin: 0;
+    font-size: 21px;
+}
+
+#searchProdukKasir {
+    width: 100%;
+    height: 48px;
+    box-sizing: border-box;
+    padding: 0 16px;
+    border: 1px solid #dfe3e8;
+    border-radius: 12px;
+    background: #f8fafc;
+    font-size: 14px;
+    outline: none;
+    margin-bottom: 20px;
+}
+
+#searchProdukKasir:focus {
+    background: #fff;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,.10);
+}
+
+.produk-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(180px,1fr));
+    gap: 14px;
+}
+
+.produk-kasir {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 15px;
+    padding: 17px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.produk-kasir:hover {
+    border-color: #2563eb;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(37,99,235,.12);
+}
+
+.nama-produk {
+    font-size: 15px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 10px;
+}
+
+.harga-produk {
+    font-size: 16px;
+    font-weight: 700;
+    color: #2563eb;
+    margin-bottom: 8px;
+}
+
+.stok-produk {
+    display: inline-block;
+    padding: 5px 8px;
+    border-radius: 7px;
+    background: #f3f4f6;
+    color: #6b7280;
+    font-size: 12px;
+}
+
+.keranjang-box {
+    position: sticky;
+    top: 20px;
+}
+
+.keranjang-box table {
+    margin-top: 18px;
+}
+
+.keranjang-box th {
+    background: #f8fafc;
+    color: #6b7280;
+    font-size: 12px;
+}
+
+.keranjang-box td,
+.keranjang-box th {
+    padding: 12px 8px;
+}
+
+.total-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+    padding: 18px 0;
+    border-top: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.total-box span:last-child {
+    font-size: 24px;
+    font-weight: 800;
+}
+
+#metodePembayaran,
+#uangBayar {
+    width: 100%;
+    height: 46px;
+    box-sizing: border-box;
+    padding: 0 13px;
+    border: 1px solid #dfe3e8;
+    border-radius: 10px;
+    background: #fff;
+    font-size: 14px;
+}
+
+#uangBayar {
+    margin-top: 10px;
+}
+
+.keranjang-box .btn-success {
+    width: 100%;
+    padding: 14px;
+    border: 0;
+    border-radius: 11px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.keranjang-box .btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0,0,0,.12);
+}
+
+@media (max-width: 900px) {
+
+    .kasir-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .keranjang-box {
+        position: static;
+    }
+
+}   
     </style>
 </head>
 
