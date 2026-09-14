@@ -101,10 +101,21 @@ function ambilProduk() {
     )
 
     .then(function(response) {
-        return response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                "HTTP Error: " + response.status
+            );
+        }
+
+        return response.text();
+
     })
 
-    .then(function(result) {
+    .then(function(text) {
+
+        const result =
+            JSON.parse(text);
 
         if (!result.success) {
 
