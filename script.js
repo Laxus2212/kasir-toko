@@ -252,23 +252,24 @@ function tampilkanProduk() {
  * ==========================================
  */
 
-function tampilkanProdukKasir() {
+function cariProdukKasir() {
 
-    const halamanKasir =
-        document.getElementById("kasir");
+    const input =
+        document.getElementById(
+            "searchProdukKasir"
+        );
 
-    if (!halamanKasir) {
-        return;
-    }
+    const kataKunci =
+        input
+            ? input.value
+                .toLowerCase()
+                .trim()
+            : "";
 
-    /*
-     * Cari container produk.
-     * Jika HTML belum memiliki container khusus,
-     * fungsi ini tidak akan mengganggu halaman.
-     */
-
-    let container =
-        document.getElementById("daftarProdukKasir");
+    const container =
+        document.getElementById(
+            "daftarProdukKasir"
+        );
 
     if (!container) {
         return;
@@ -276,12 +277,27 @@ function tampilkanProdukKasir() {
 
     container.innerHTML = "";
 
-
     daftarProduk.forEach(function(produk) {
 
         if (
             String(produk.status)
                 .toLowerCase() !== "aktif"
+        ) {
+            return;
+        }
+
+        const nama =
+            String(produk.nama || "")
+                .toLowerCase();
+
+        const kode =
+            String(produk.kode || "")
+                .toLowerCase();
+
+        if (
+            kataKunci !== "" &&
+            !nama.includes(kataKunci) &&
+            !kode.includes(kataKunci)
         ) {
             return;
         }
@@ -1036,6 +1052,20 @@ document.addEventListener(
         ambilProduk();
 
         tampilkanKeranjang();
+
+        const searchProduk =
+            document.getElementById(
+                "searchProdukKasir"
+            );
+
+        if (searchProduk) {
+
+            searchProduk.addEventListener(
+                "input",
+                cariProdukKasir
+            );
+
+        }
 
     }
 );
