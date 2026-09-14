@@ -80,10 +80,6 @@ function bukaHalaman(namaHalaman, tombol) {
      * Saat membuka Stok
      */
 
-    if (namaHalaman === "stok") {
-        tampilkanStok();
-    }
-
 }
 
 /*
@@ -193,9 +189,6 @@ daftarProduk =
 
 
 tampilkanProduk();
-
-
-tampilkanStok();
 
 }
 
