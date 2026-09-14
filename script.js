@@ -1,56 +1,417 @@
 /*
- * PINDAH HALAMAN
+ * ==========================================
+ * KONFIGURASI
+ * ==========================================
  */
+
+const SCRIPT_URL =
+    "https://script.google.com/macros/s/AKfycbxX9XqRImLGvvTosHjLYBS4G4HkZPwTb_XfKxiFNHxs83BSYkbm9XDz28gJ4huMsPML/exec";
+
+
+/*
+ * ==========================================
+ * DATA PRODUK
+ * ==========================================
+ */
+
+let daftarProduk = [];
+let keranjang = [];
+
+
+/*
+ * ==========================================
+ * PINDAH HALAMAN
+ * ==========================================
+ */
+
 function bukaHalaman(namaHalaman, tombol) {
-    const semuaHalaman = document.querySelectorAll(".page");
+
+    const semuaHalaman =
+        document.querySelectorAll(".page");
 
     semuaHalaman.forEach(function(halaman) {
         halaman.classList.remove("active");
     });
 
-    document.getElementById(namaHalaman).classList.add("active");
+    const halaman =
+        document.getElementById(namaHalaman);
 
-    const semuaTombol = document.querySelectorAll(".menu-btn");
+    if (halaman) {
+        halaman.classList.add("active");
+    }
+
+    const semuaTombol =
+        document.querySelectorAll(".menu-btn");
 
     semuaTombol.forEach(function(btn) {
         btn.classList.remove("active");
     });
 
-    tombol.classList.add("active");
+    if (tombol) {
+        tombol.classList.add("active");
 
-    const judul = tombol.textContent.trim();
+        const judul =
+            tombol.textContent.trim();
 
-    document.getElementById("judulHalaman").textContent = judul;
+        const judulHalaman =
+            document.getElementById("judulHalaman");
+
+        if (judulHalaman) {
+            judulHalaman.textContent = judul;
+        }
+    }
+
+    if (namaHalaman === "produk") {
+        tampilkanProduk();
+    }
+
+    if (namaHalaman === "kasir") {
+        tampilkanProdukKasir();
+    }
 }
 
 
 /*
+ * ==========================================
  * FORMAT RUPIAH
+ * ==========================================
  */
+
 function formatRupiah(angka) {
+
     return new Intl.NumberFormat("id-ID", {
         style: "currency",
         currency: "IDR",
         minimumFractionDigits: 0
-    }).format(angka);
+    }).format(Number(angka) || 0);
+
 }
 
 
 /*
- * KERANJANG
+ * ==========================================
+ * AMBIL DATA PRODUK DARI GOOGLE SHEETS
+ * ==========================================
  */
-let keranjang = [];
 
+function ambilProduk() {
+
+    fetch(
+        SCRIPT_URL + "?action=produk"
+    )
+
+    .then(function(response) {
+        return response.json();
+    })
+
+    .then(function(result) {
+
+        if (!result.success) {
+
+            alert(
+                result.message ||
+                "Gagal mengambil data produk."
+            );
+
+            return;
+        }
+
+        daftarProduk =
+            result.data || [];
+
+        tampilkanProduk();
+        tampilkanProdukKasir();
+
+    })
+
+    .catch(function(error) {
+
+        console.error(error);
+
+        alert(
+            "Gagal terhubung ke database Google Sheets."
+        );
+
+    });
+
+}
+
+
+/*
+ * ==========================================
+ * TAMPILKAN PRODUK DI HALAMAN PRODUK
+ * ==========================================
+ */
+
+function tampilkanProduk() {
+
+    const halamanProduk =
+        document.getElementById("produk");
+
+    if (!halamanProduk) {
+        return;
+    }
+
+    const tabel =
+        halamanProduk.querySelector("tbody");
+
+    if (!tabel) {
+        return;
+    }
+
+    tabel.innerHTML = "";
+
+    if (daftarProduk.length === 0) {
+
+        tabel.innerHTML = `
+            <tr>
+                <td colspan="10" class="kosong">
+                    Belum ada produk.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    daftarProduk.forEach(function(produk) {
+
+        tabel.innerHTML += `
+            <tr>
+
+                <td>
+                    ${produk.kode || "-"}
+                </td>
+
+                <td>
+                    ${produk.barcode || "-"}
+                </td>
+
+                <td>
+                    ${produk.nama || "-"}
+                </td>
+
+                <td>
+                    ${produk.kategori || "-"}
+                </td>
+
+                <td>
+                    ${formatRupiah(produk.hargaBeli)}
+                </td>
+
+                <td>
+                    ${formatRupiah(produk.hargaJual)}
+                </td>
+
+                <td>
+                    ${produk.stok || 0}
+                </td>
+
+                <td>
+                    ${produk.stokMinimum || 0}
+                </td>
+
+                <td>
+                    ${produk.satuan || "PCS"}
+                </td>
+
+                <td>
+                    ${produk.status || "Aktif"}
+                </td>
+
+            </tr>
+        `;
+
+    });
+
+}
+
+
+/*
+ * ==========================================
+ * TAMPILKAN PRODUK DI KASIR
+ * ==========================================
+ */
+
+function tampilkanProdukKasir() {
+
+    const halamanKasir =
+        document.getElementById("kasir");
+
+    if (!halamanKasir) {
+        return;
+    }
+
+    /*
+     * Cari container produk.
+     * Jika HTML belum memiliki container khusus,
+     * fungsi ini tidak akan mengganggu halaman.
+     */
+
+    let container =
+        document.getElementById("daftarProdukKasir");
+
+    if (!container) {
+        return;
+    }
+
+    container.innerHTML = "";
+
+
+    daftarProduk.forEach(function(produk) {
+
+        if (
+            String(produk.status)
+                .toLowerCase() !== "aktif"
+        ) {
+            return;
+        }
+
+        container.innerHTML += `
+
+            <div
+                class="produk-kasir"
+                onclick="tambahKeKeranjang(
+                    '${escapeHtml(produk.kode)}'
+                )"
+            >
+
+                <div class="nama-produk">
+                    ${escapeHtml(produk.nama)}
+                </div>
+
+                <div class="harga-produk">
+                    ${formatRupiah(produk.hargaJual)}
+                </div>
+
+                <div class="stok-produk">
+                    Stok: ${produk.stok || 0}
+                </div>
+
+            </div>
+
+        `;
+
+    });
+
+}
+
+
+/*
+ * ==========================================
+ * TAMBAH PRODUK KE KERANJANG
+ * ==========================================
+ */
+
+function tambahKeKeranjang(kodeProduk) {
+
+    const produk =
+        daftarProduk.find(function(item) {
+
+            return String(item.kode) ===
+                String(kodeProduk);
+
+        });
+
+
+    if (!produk) {
+
+        alert("Produk tidak ditemukan.");
+
+        return;
+    }
+
+
+    if (Number(produk.stok) <= 0) {
+
+        alert("Stok produk habis.");
+
+        return;
+    }
+
+
+    const produkKeranjang =
+        keranjang.find(function(item) {
+
+            return String(item.kode) ===
+                String(kodeProduk);
+
+        });
+
+
+    if (produkKeranjang) {
+
+        if (
+            produkKeranjang.jumlah >=
+            Number(produk.stok)
+        ) {
+
+            alert("Jumlah melebihi stok.");
+
+            return;
+        }
+
+        produkKeranjang.jumlah++;
+
+        produkKeranjang.subtotal =
+            produkKeranjang.jumlah *
+            produkKeranjang.hargaJual;
+
+    } else {
+
+        keranjang.push({
+
+            kode: produk.kode,
+
+            nama: produk.nama,
+
+            hargaBeli:
+                Number(produk.hargaBeli) || 0,
+
+            hargaJual:
+                Number(produk.hargaJual) || 0,
+
+            jumlah: 1,
+
+            subtotal:
+                Number(produk.hargaJual) || 0
+
+        });
+
+    }
+
+
+    tampilkanKeranjang();
+
+}
+
+
+/*
+ * ==========================================
+ * KERANJANG
+ * ==========================================
+ */
 
 function getTotal() {
-    return keranjang.reduce(function(total, produk) {
-        return total + produk.subtotal;
-    }, 0);
+
+    return keranjang.reduce(
+        function(total, produk) {
+
+            return total +
+                Number(produk.subtotal || 0);
+
+        },
+        0
+    );
+
 }
 
 
 function tampilkanKeranjang() {
-    const tbody = document.getElementById("keranjang");
+
+    const tbody =
+        document.getElementById("keranjang");
 
     if (!tbody) {
         return;
@@ -58,7 +419,9 @@ function tampilkanKeranjang() {
 
     tbody.innerHTML = "";
 
+
     if (keranjang.length === 0) {
+
         tbody.innerHTML = `
             <tr>
                 <td colspan="3" class="kosong">
@@ -66,254 +429,453 @@ function tampilkanKeranjang() {
                 </td>
             </tr>
         `;
+
+    } else {
+
+        keranjang.forEach(function(produk) {
+
+            tbody.innerHTML += `
+                <tr>
+
+                    <td>
+                        ${escapeHtml(produk.nama)}
+                    </td>
+
+                    <td>
+                        ${produk.jumlah}
+                    </td>
+
+                    <td>
+                        ${formatRupiah(
+                            produk.subtotal
+                        )}
+                    </td>
+
+                </tr>
+            `;
+
+        });
+
     }
 
-    keranjang.forEach(function(produk) {
-        tbody.innerHTML += `
-            <tr>
-                <td>${produk.nama}</td>
-                <td>${produk.jumlah}</td>
-                <td>${formatRupiah(produk.subtotal)}</td>
-            </tr>
-        `;
-    });
 
-    const totalElement = document.getElementById("total");
+    const totalElement =
+        document.getElementById("total");
 
     if (totalElement) {
-        totalElement.textContent = formatRupiah(getTotal());
+
+        totalElement.textContent =
+            formatRupiah(getTotal());
+
     }
+
 }
 
 
 /*
- * GOOGLE SHEETS
+ * ==========================================
+ * TAMBAH PRODUK
+ * ==========================================
  */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxX9XqRImLGvvTosHjLYBS4G4HkZPwTb_XfKxiFNHxs83BSYkbm9XDz28gJ4huMsPML/exec";
 
-
-function kirimKeGoogleSheets(data) {
-    const form = document.createElement("form");
-
-    form.method = "POST";
-    form.target = "kirimFrame";
-    form.action = SCRIPT_URL;
-
-    const input = document.createElement("input");
-
-    input.type = "hidden";
-    input.name = "data";
-    input.value = JSON.stringify(data);
-
-    form.appendChild(input);
-
-    document.body.appendChild(form);
-
-    form.submit();
-
-    form.remove();
-}
-
-
-/*
- * FORM TAMBAH PRODUK
- */
 function tampilkanFormProduk() {
-    const form = document.getElementById("formProduk");
+
+    const form =
+        document.getElementById("formProduk");
 
     if (form) {
         form.style.display = "block";
     }
+
 }
 
 
 function tutupFormProduk() {
-    const form = document.getElementById("formProduk");
+
+    const form =
+        document.getElementById("formProduk");
 
     if (form) {
         form.style.display = "none";
     }
+
 }
 
 
 function simpanProduk() {
-    const kode = document.getElementById("kodeProduk").value.trim();
-    const barcode = document.getElementById("barcodeProduk").value.trim();
-    const nama = document.getElementById("namaProdukBaru").value.trim();
-    const kategori = document.getElementById("kategoriProduk").value.trim();
+
+    const kodeElement =
+        document.getElementById("kodeProduk");
+
+    const barcodeElement =
+        document.getElementById("barcodeProduk");
+
+    const namaElement =
+        document.getElementById("namaProdukBaru");
+
+    const kategoriElement =
+        document.getElementById("kategoriProduk");
+
+    const hargaBeliElement =
+        document.getElementById("hargaBeli");
+
+    const hargaJualElement =
+        document.getElementById("hargaJual");
+
+    const stokElement =
+        document.getElementById("stokAwal");
+
+    const stokMinimumElement =
+        document.getElementById("stokMinimum");
+
+    const satuanElement =
+        document.getElementById("satuanProduk");
+
+    const statusElement =
+        document.getElementById("statusProduk");
+
+
+    if (!kodeElement || !namaElement) {
+
+        alert(
+            "Form produk tidak ditemukan."
+        );
+
+        return;
+    }
+
+
+    const kode =
+        kodeElement.value.trim();
+
+    const barcode =
+        barcodeElement ?
+        barcodeElement.value.trim() :
+        "";
+
+    const nama =
+        namaElement.value.trim();
+
+    const kategori =
+        kategoriElement ?
+        kategoriElement.value.trim() :
+        "";
 
     const hargaBeli =
-        Number(document.getElementById("hargaBeli").value);
+        Number(
+            hargaBeliElement ?
+            hargaBeliElement.value :
+            0
+        );
 
     const hargaJual =
-        Number(document.getElementById("hargaJual").value);
+        Number(
+            hargaJualElement ?
+            hargaJualElement.value :
+            0
+        );
 
     const stok =
-        Number(document.getElementById("stokAwal").value);
+        Number(
+            stokElement ?
+            stokElement.value :
+            0
+        );
 
     const stokMinimum =
-        Number(document.getElementById("stokMinimum").value);
+        Number(
+            stokMinimumElement ?
+            stokMinimumElement.value :
+            0
+        );
 
     const satuan =
-        document.getElementById("satuanProduk").value;
+        satuanElement ?
+        satuanElement.value :
+        "PCS";
 
     const status =
-        document.getElementById("statusProduk").value;
+        statusElement ?
+        statusElement.value :
+        "Aktif";
 
 
     if (!kode) {
-        alert("Kode produk wajib diisi.");
+
+        alert(
+            "Kode produk wajib diisi."
+        );
+
         return;
     }
 
 
     if (!nama) {
-        alert("Nama produk wajib diisi.");
+
+        alert(
+            "Nama produk wajib diisi."
+        );
+
         return;
     }
 
 
     if (hargaJual <= 0) {
-        alert("Harga jual wajib diisi.");
+
+        alert(
+            "Harga jual wajib diisi."
+        );
+
         return;
     }
 
 
     if (hargaBeli < 0) {
-        alert("Harga beli tidak boleh kurang dari 0.");
+
+        alert(
+            "Harga beli tidak boleh kurang dari 0."
+        );
+
         return;
     }
 
 
     if (stok < 0) {
-        alert("Stok tidak boleh kurang dari 0.");
+
+        alert(
+            "Stok tidak boleh kurang dari 0."
+        );
+
         return;
     }
 
 
     const data = {
+
         action: "produk_tambah",
+
         kodeProduk: kode,
+
         barcode: barcode,
+
         namaProduk: nama,
+
         kategori: kategori,
+
         hargaBeli: hargaBeli,
+
         hargaJual: hargaJual,
+
         stok: stok,
+
         stokMinimum: stokMinimum,
+
         satuan: satuan,
+
         status: status
+
     };
 
 
     kirimKeGoogleSheets(data);
 
 
-    alert("Produk berhasil dikirim ke Google Sheets.");
+    alert(
+        "Produk berhasil dikirim ke Google Sheets."
+    );
 
 
-    document.getElementById("kodeProduk").value = "";
-    document.getElementById("barcodeProduk").value = "";
-    document.getElementById("namaProdukBaru").value = "";
-    document.getElementById("kategoriProduk").value = "";
-    document.getElementById("hargaBeli").value = "";
-    document.getElementById("hargaJual").value = "";
-    document.getElementById("stokAwal").value = "0";
-    document.getElementById("stokMinimum").value = "5";
-    document.getElementById("satuanProduk").value = "PCS";
-    document.getElementById("statusProduk").value = "Aktif";
+    kodeElement.value = "";
+
+    if (barcodeElement)
+        barcodeElement.value = "";
+
+    namaElement.value = "";
+
+    if (kategoriElement)
+        kategoriElement.value = "";
+
+    if (hargaBeliElement)
+        hargaBeliElement.value = "";
+
+    if (hargaJualElement)
+        hargaJualElement.value = "";
+
+    if (stokElement)
+        stokElement.value = "0";
+
+    if (stokMinimumElement)
+        stokMinimumElement.value = "5";
+
+    if (satuanElement)
+        satuanElement.value = "PCS";
+
+    if (statusElement)
+        statusElement.value = "Aktif";
+
 
     tutupFormProduk();
+
+
+    setTimeout(
+        ambilProduk,
+        1000
+    );
+
 }
 
 
 /*
+ * ==========================================
  * PEMBAYARAN
+ * ==========================================
  */
+
 function prosesPembayaran() {
 
     if (keranjang.length === 0) {
-        alert("Keranjang masih kosong.");
+
+        alert(
+            "Keranjang masih kosong."
+        );
+
         return;
     }
 
 
-    const metode =
-        document.getElementById("metodePembayaran").value;
+    const metodeElement =
+        document.getElementById(
+            "metodePembayaran"
+        );
 
-    const total = getTotal();
+    const metode =
+        metodeElement ?
+        metodeElement.value :
+        "cash";
+
+
+    const total =
+        getTotal();
+
 
     let uangBayar = 0;
 
 
     if (metode === "cash") {
 
+        const uangBayarElement =
+            document.getElementById(
+                "uangBayar"
+            );
+
         uangBayar =
-            Number(document.getElementById("uangBayar").value);
+            Number(
+                uangBayarElement ?
+                uangBayarElement.value :
+                0
+            );
+
 
         if (uangBayar < total) {
-            alert("Uang pembayaran kurang.");
+
+            alert(
+                "Uang pembayaran kurang."
+            );
+
             return;
         }
+
     }
 
 
-    const sekarang = new Date();
+    const sekarang =
+        new Date();
+
 
     const idTransaksi =
-        "TRX-" + sekarang.getTime();
+        "TRX-" +
+        sekarang.getTime();
+
 
     const tanggal =
-        sekarang.toLocaleDateString("id-ID");
+        sekarang.toLocaleDateString(
+            "id-ID"
+        );
+
 
     const jam =
-        sekarang.toLocaleTimeString("id-ID");
+        sekarang.toLocaleTimeString(
+            "id-ID"
+        );
 
 
-    keranjang.forEach(function(produk) {
+    /*
+     * Simpan setiap produk transaksi
+     */
 
-        const data = {
+    keranjang.forEach(
+        function(produk) {
 
-            idTransaksi: idTransaksi,
+            const data = {
 
-            tanggal: tanggal,
+                idTransaksi:
+                    idTransaksi,
 
-            jam: jam,
+                tanggal:
+                    tanggal,
 
-            produk: produk.nama,
+                jam:
+                    jam,
 
-            jumlah: produk.jumlah,
+                produk:
+                    produk.nama,
 
-            total: produk.subtotal,
+                jumlah:
+                    produk.jumlah,
 
-            metode: metode.toUpperCase()
-        };
+                total:
+                    produk.subtotal,
+
+                metode:
+                    metode.toUpperCase()
+
+            };
 
 
-        kirimKeGoogleSheets(data);
-    });
+            kirimKeGoogleSheets(data);
+
+        }
+    );
 
 
     let pesan =
         "PEMBAYARAN BERHASIL!\n\n";
 
-    pesan +=
-        "ID Transaksi: " + idTransaksi + "\n";
 
     pesan +=
-        "Total: " + formatRupiah(total);
+        "ID Transaksi: " +
+        idTransaksi +
+        "\n";
+
+
+    pesan +=
+        "Total: " +
+        formatRupiah(total);
 
 
     if (metode === "cash") {
 
         pesan +=
             "\nKembalian: " +
-            formatRupiah(uangBayar - total);
+            formatRupiah(
+                uangBayar - total
+            );
 
     } else {
 
         pesan +=
             "\nMetode: QRIS";
+
     }
 
 
@@ -324,32 +886,138 @@ function prosesPembayaran() {
 
 
     const uangBayarElement =
-        document.getElementById("uangBayar");
+        document.getElementById(
+            "uangBayar"
+        );
 
     if (uangBayarElement) {
+
         uangBayarElement.value = "";
+
     }
 
 
     const kembalianElement =
-        document.getElementById("kembalian");
+        document.getElementById(
+            "kembalian"
+        );
 
     if (kembalianElement) {
-        kembalianElement.textContent = "Rp 0";
+
+        kembalianElement.textContent =
+            "Rp 0";
+
     }
 
 
     tampilkanKeranjang();
+
+
+    setTimeout(
+        ambilProduk,
+        1000
+    );
+
 }
 
 
 /*
- * IFRAME UNTUK KIRIM DATA
+ * ==========================================
+ * KIRIM KE GOOGLE SHEETS
+ * ==========================================
  */
-const iframe = document.createElement("iframe");
 
-iframe.name = "kirimFrame";
+function kirimKeGoogleSheets(data) {
 
-iframe.style.display = "none";
+    const form =
+        document.createElement(
+            "form"
+        );
 
-document.body.appendChild(iframe);
+
+    form.method = "POST";
+
+    form.target = "kirimFrame";
+
+    form.action = SCRIPT_URL;
+
+
+    const input =
+        document.createElement(
+            "input"
+        );
+
+
+    input.type = "hidden";
+
+    input.name = "data";
+
+    input.value =
+        JSON.stringify(data);
+
+
+    form.appendChild(input);
+
+    document.body.appendChild(form);
+
+    form.submit();
+
+    form.remove();
+
+}
+
+
+/*
+ * ==========================================
+ * KEAMANAN TAMPILAN
+ * ==========================================
+ */
+
+function escapeHtml(teks) {
+
+    return String(teks || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/*
+ * ==========================================
+ * IFRAME
+ * ==========================================
+ */
+
+const iframe =
+    document.createElement("iframe");
+
+iframe.name =
+    "kirimFrame";
+
+iframe.style.display =
+    "none";
+
+document.body.appendChild(
+    iframe
+);
+
+
+/*
+ * ==========================================
+ * JALANKAN SAAT WEBSITE DIBUKA
+ * ==========================================
+ */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        ambilProduk();
+
+        tampilkanKeranjang();
+
+    }
+);
