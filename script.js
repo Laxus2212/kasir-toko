@@ -199,19 +199,14 @@ function produkCallback(result) {
     }
 
 
-    daftarProduk =
-        result.data || [];
+daftarProduk =
+    result.data || [];
 
 
-    /*
-     * Produk hanya ditampilkan
-     * di halaman Produk.
-     *
-     * Kasir tidak otomatis menampilkan
-     * semua produk.
-     */
+tampilkanProduk();
 
-    tampilkanProduk();
+
+tampilkanStok();
 
 }
 
