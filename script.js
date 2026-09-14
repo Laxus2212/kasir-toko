@@ -96,54 +96,60 @@ function formatRupiah(angka) {
 
 function ambilProduk() {
 
-    fetch(
-        SCRIPT_URL + "?action=produk"
-    )
+    const script =
+        document.createElement("script");
 
-    .then(function(response) {
+    const callbackName =
+        "produkCallback_" + Date.now();
 
-        if (!response.ok) {
-            throw new Error(
-                "HTTP Error: " + response.status
-            );
-        }
+    window[callbackName] =
+        function(result) {
 
-        return response.text();
+            if (!result.success) {
 
-    })
+                alert(
+                    result.message ||
+                    "Gagal mengambil data produk."
+                );
 
-    .then(function(text) {
+                delete window[callbackName];
+                script.remove();
 
-        const result =
-            JSON.parse(text);
+                return;
+            }
 
-        if (!result.success) {
+            daftarProduk =
+                result.data || [];
+
+            tampilkanProduk();
+            tampilkanProdukKasir();
+
+            delete window[callbackName];
+
+            script.remove();
+        };
+
+
+    script.src =
+        SCRIPT_URL +
+        "?action=produk&callback=" +
+        callbackName;
+
+
+    script.onerror =
+        function() {
 
             alert(
-                result.message ||
-                "Gagal mengambil data produk."
+                "Gagal terhubung ke database Google Sheets."
             );
 
-            return;
-        }
+            delete window[callbackName];
 
-        daftarProduk =
-            result.data || [];
+            script.remove();
+        };
 
-        tampilkanProduk();
-        tampilkanProdukKasir();
 
-    })
-
-    .catch(function(error) {
-
-        console.error(error);
-
-        alert(
-            "Gagal terhubung ke database Google Sheets."
-        );
-
-    });
+    document.body.appendChild(script);
 
 }
 
