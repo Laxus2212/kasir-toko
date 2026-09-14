@@ -99,57 +99,58 @@ function ambilProduk() {
     const script =
         document.createElement("script");
 
-    const callbackName =
-        "produkCallback_" + Date.now();
-
-    window[callbackName] =
-        function(result) {
-
-            if (!result.success) {
-
-                alert(
-                    result.message ||
-                    "Gagal mengambil data produk."
-                );
-
-                delete window[callbackName];
-                script.remove();
-
-                return;
-            }
-
-            daftarProduk =
-                result.data || [];
-
-            tampilkanProduk();
-            tampilkanProdukKasir();
-
-            delete window[callbackName];
-
-            script.remove();
-        };
-
-
     script.src =
         SCRIPT_URL +
-        "?action=produk&callback=" +
-        callbackName;
-
+        "?action=produk&callback=produkCallback&_=" +
+        Date.now();
 
     script.onerror =
         function() {
+
+            console.error(
+                "Gagal memuat data produk dari Apps Script."
+            );
 
             alert(
                 "Gagal terhubung ke database Google Sheets."
             );
 
-            delete window[callbackName];
-
             script.remove();
+
         };
 
-
     document.body.appendChild(script);
+
+}
+
+
+function produkCallback(result) {
+
+    console.log(
+        "Data produk diterima:",
+        result
+    );
+
+
+    if (!result || !result.success) {
+
+        alert(
+            result && result.message
+                ? result.message
+                : "Gagal mengambil data produk."
+        );
+
+        return;
+    }
+
+
+    daftarProduk =
+        result.data || [];
+
+
+    tampilkanProduk();
+
+    tampilkanProdukKasir();
 
 }
 
