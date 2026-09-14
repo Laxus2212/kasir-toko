@@ -85,25 +85,22 @@ function bukaHalaman(namaHalaman, tombol) {
      * Saat membuka Produk
      */
 
-    if (namaHalaman === "produk") {
-
-        tampilkanProduk();
-
-    }
-
-
-    /*
-     * Saat membuka Kasir
-     *
-     * Jika belum ada pencarian,
-     * area produk tetap kosong.
-     */
-
     if (namaHalaman === "kasir") {
 
-        tampilkanProdukKasir();
+    tampilkanProdukKasir();
 
-    }
+}
+
+
+/*
+ * Saat membuka Stok
+ */
+
+if (namaHalaman === "stok") {
+
+    tampilkanStok();
+
+}
 
 }
 
@@ -221,108 +218,75 @@ function produkCallback(result) {
 
 /*
  * ==========================================
- * TAMPILKAN PRODUK
+ * TAMPILKAN STOK
  * ==========================================
  */
 
-function tampilkanProduk() {
+function tampilkanStok() {
 
-    const halamanProduk =
-        document.getElementById("produk");
+    const tabelStok =
+        document.getElementById("tabelStok");
 
-
-    if (!halamanProduk) {
-
+    if (!tabelStok) {
         return;
-
     }
-
-
-    const tabel =
-        halamanProduk.querySelector("tbody");
-
-
-    if (!tabel) {
-
-        return;
-
-    }
-
-
-    tabel.innerHTML = "";
-
 
     if (
+        !daftarProduk ||
         daftarProduk.length === 0
     ) {
 
-        tabel.innerHTML = `
+        tabelStok.innerHTML = `
             <tr>
-                <td colspan="10" class="kosong">
-                    Belum ada produk.
+                <td colspan="5">
+                    Belum ada data stok.
                 </td>
             </tr>
         `;
 
-
         return;
-
     }
 
+    tabelStok.innerHTML = "";
 
-    daftarProduk.forEach(
-        function(produk) {
+    daftarProduk.forEach(function(produk) {
 
-            tabel.innerHTML += `
+        let status = "Aman";
 
-                <tr>
-
-                    <td>
-                        ${escapeHtml(produk.kode || "-")}
-                    </td>
-
-                    <td>
-                        ${escapeHtml(produk.barcode || "-")}
-                    </td>
-
-                    <td>
-                        ${escapeHtml(produk.nama || "-")}
-                    </td>
-
-                    <td>
-                        ${escapeHtml(produk.kategori || "-")}
-                    </td>
-
-                    <td>
-                        ${formatRupiah(produk.hargaBeli)}
-                    </td>
-
-                    <td>
-                        ${formatRupiah(produk.hargaJual)}
-                    </td>
-
-                    <td>
-                        ${produk.stok || 0}
-                    </td>
-
-                    <td>
-                        ${produk.stokMinimum || 0}
-                    </td>
-
-                    <td>
-                        ${escapeHtml(produk.satuan || "PCS")}
-                    </td>
-
-                    <td>
-                        ${escapeHtml(produk.status || "Aktif")}
-                    </td>
-
-                </tr>
-
-            `;
-
+        if (
+            Number(produk.stok) <=
+            Number(produk.stokMinimum)
+        ) {
+            status = "Stok Menipis";
         }
-    );
+
+        tabelStok.innerHTML += `
+            <tr>
+
+                <td>
+                    ${produk.kode || "-"}
+                </td>
+
+                <td>
+                    ${produk.nama || "-"}
+                </td>
+
+                <td>
+                    ${produk.stok ?? 0}
+                </td>
+
+                <td>
+                    ${produk.stokMinimum ?? 0}
+                </td>
+
+                <td>
+                    ${status}
+                </td>
+
+            </tr>
+        `;
+
+    });
 
 }
 
