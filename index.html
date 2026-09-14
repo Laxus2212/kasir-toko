@@ -170,85 +170,263 @@
             font-size: 18px;
         }
 
-        /* =========================
-           KASIR
-        ========================= */
+<!-- =========================
+     KASIR
+========================== -->
 
-        .kasir-layout {
-            display: grid;
-            grid-template-columns: 1.7fr 1fr;
-            gap: 20px;
-        }
+<section id="kasir" class="page">
 
-        .produk-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-        }
+    <div class="kasir-layout">
 
-        .produk-card {
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            padding: 15px;
-            background: white;
-            cursor: pointer;
-            transition: .2s;
-        }
+        <!-- PRODUK -->
+        <div class="panel">
 
-        .produk-card:hover {
-            border-color: #2563eb;
-            transform: translateY(-2px);
-        }
+            <div class="panel-header">
 
-        .produk-card h3 {
-            margin: 0 0 8px;
-            font-size: 15px;
-        }
+                <div>
+                    <h2>🛒 Kasir</h2>
+                    <p style="margin:5px 0 0;color:#6b7280;font-size:13px;">
+                        Cari produk untuk menambahkannya ke keranjang
+                    </p>
+                </div>
 
-        .produk-harga {
-            color: #2563eb;
-            font-weight: bold;
-        }
+                <button
+                    class="btn-primary"
+                    onclick="tampilkanFormProduk()"
+                >
+                    + Tambah Produk
+                </button>
 
-        .produk-stok {
-            color: #6b7280;
-            font-size: 12px;
-            margin-top: 5px;
-        }
+            </div>
 
-        .keranjang-box {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,.06);
-        }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+            <!-- SEARCH -->
 
-        th,
-        td {
-            padding: 11px 8px;
-            border-bottom: 1px solid #eee;
-            text-align: left;
-            font-size: 13px;
-        }
+            <div class="search-box">
 
-        th {
-            background: #f9fafb;
-        }
+                <input
+                    type="text"
+                    id="searchProdukKasir"
+                    placeholder="🔍 Cari nama atau kode produk..."
+                    autocomplete="off"
+                >
 
-        .total-box {
-            display: flex;
-            justify-content: space-between;
-            font-size: 20px;
-            font-weight: bold;
-            margin: 20px 0;
-            padding-top: 15px;
-            border-top: 2px solid #eee;
-        }
+            </div>
+
+
+            <!-- DAFTAR PRODUK -->
+
+            <div
+                class="produk-grid"
+                id="daftarProdukKasir"
+            >
+
+                <div class="kosong">
+                    Ketik nama atau kode produk untuk mencari.
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- KERANJANG -->
+
+        <div class="keranjang-box">
+
+            <div
+                style="
+                    display:flex;
+                    justify-content:space-between;
+                    align-items:center;
+                    margin-bottom:15px;
+                "
+            >
+
+                <div>
+
+                    <h2 style="margin:0;">
+                        🛍️ Keranjang
+                    </h2>
+
+                    <small style="color:#6b7280;">
+                        Daftar barang yang akan dibayar
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!-- TABEL KERANJANG -->
+
+            <div style="overflow-x:auto;">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Produk</th>
+
+                            <th>Qty</th>
+
+                            <th>Subtotal</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="keranjang">
+
+                        <tr>
+
+                            <td
+                                colspan="3"
+                                class="kosong"
+                            >
+                                Keranjang kosong
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- TOTAL -->
+
+            <div class="total-box">
+
+                <span>
+                    Total Belanja
+                </span>
+
+                <span id="total">
+                    Rp 0
+                </span>
+
+            </div>
+
+
+            <!-- PEMBAYARAN -->
+
+            <div style="margin-bottom:12px;">
+
+                <label
+                    style="
+                        display:block;
+                        margin-bottom:6px;
+                        font-size:13px;
+                        font-weight:600;
+                    "
+                >
+                    Metode Pembayaran
+                </label>
+
+
+                <select
+                    id="metodePembayaran"
+                >
+
+                    <option value="cash">
+                        💵 Cash
+                    </option>
+
+                    <option value="qris">
+                        📱 QRIS
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- UANG BAYAR -->
+
+            <div style="margin-bottom:12px;">
+
+                <label
+                    style="
+                        display:block;
+                        margin-bottom:6px;
+                        font-size:13px;
+                        font-weight:600;
+                    "
+                >
+                    Uang Pembayaran
+                </label>
+
+
+                <input
+                    type="number"
+                    id="uangBayar"
+                    placeholder="Masukkan jumlah pembayaran"
+                    min="0"
+                >
+
+            </div>
+
+
+            <!-- KEMBALIAN -->
+
+            <div
+                style="
+                    background:#f9fafb;
+                    border-radius:10px;
+                    padding:12px;
+                    margin-bottom:15px;
+                "
+            >
+
+                <div
+                    style="
+                        display:flex;
+                        justify-content:space-between;
+                        align-items:center;
+                    "
+                >
+
+                    <span>
+                        Kembalian
+                    </span>
+
+                    <strong
+                        id="kembalian"
+                    >
+                        Rp 0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- BAYAR -->
+
+            <button
+                class="btn-success"
+                onclick="prosesPembayaran()"
+                style="
+                    width:100%;
+                    padding:14px;
+                    font-size:15px;
+                    font-weight:700;
+                "
+            >
+                💳 Proses Pembayaran
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
 
         /* =========================
            BUTTON
