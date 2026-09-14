@@ -1241,19 +1241,50 @@ function prosesPembayaran() {
     }
 
 
-    const kembalianElement =
-        document.getElementById(
-            "kembalian"
-        );
+const kembalianElement =
+    document.getElementById(
+        "kembalian"
+    );
 
+const uangBayarElement =
+    document.getElementById(
+        "uangBayar"
+    );
 
-    if (kembalianElement) {
+if (
+    kembalianElement &&
+    uangBayarElement
+) {
+
+    const total =
+        getTotal();
+
+    const uangBayar =
+        Number(
+            uangBayarElement.value
+        ) || 0;
+
+    const kembalian =
+        uangBayar - total;
+
+    if (kembalian < 0) {
 
         kembalianElement.textContent =
-            "Rp 0";
+            "Kurang " +
+            formatRupiah(
+                Math.abs(kembalian)
+            );
+
+    } else {
+
+        kembalianElement.textContent =
+            formatRupiah(
+                kembalian
+            );
 
     }
 
+}
 
     tampilkanKeranjang();
 
@@ -1394,29 +1425,61 @@ document.body.appendChild(
  * ==========================================
  */
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function() {
+const uangBayarInput =
+    document.getElementById(
+        "uangBayar"
+    );
 
-        ambilProduk();
+if (uangBayarInput) {
 
-        tampilkanKeranjang();
+    uangBayarInput.addEventListener(
+        "input",
+        function() {
 
+            const total =
+                getTotal();
 
-        const searchProduk =
-            document.getElementById(
-                "searchProdukKasir"
-            );
+            const uangBayar =
+                Number(
+                    uangBayarInput.value
+                ) || 0;
 
+            const kembalian =
+                uangBayar - total;
 
-        if (searchProduk) {
+            const kembalianElement =
+                document.getElementById(
+                    "kembalian"
+                );
 
-            searchProduk.addEventListener(
-                "input",
-                cariProdukKasir
-            );
+            if (
+                kembalianElement
+            ) {
+
+                if (
+                    kembalian < 0
+                ) {
+
+                    kembalianElement.textContent =
+                        "Kurang " +
+                        formatRupiah(
+                            Math.abs(
+                                kembalian
+                            )
+                        );
+
+                } else {
+
+                    kembalianElement.textContent =
+                        formatRupiah(
+                            kembalian
+                        );
+
+                }
+
+            }
 
         }
+    );
 
-    }
-);
+}
