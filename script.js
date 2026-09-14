@@ -138,12 +138,23 @@ function ambilProduk() {
     const script =
         document.createElement("script");
 
-
     script.src =
         SCRIPT_URL +
         "?action=produk&callback=produkCallback&_=" +
         Date.now();
 
+    script.onload =
+        function() {
+
+            console.log(
+                "Permintaan data produk berhasil dikirim."
+            );
+
+            setTimeout(function() {
+                script.remove();
+            }, 1000);
+
+        };
 
     script.onerror =
         function() {
@@ -152,16 +163,13 @@ function ambilProduk() {
                 "Gagal memuat data produk dari Apps Script."
             );
 
-
-            alert(
-                "Gagal terhubung ke database Google Sheets."
-            );
-
-
             script.remove();
 
-        };
+            console.log(
+                "Koneksi database gagal."
+            );
 
+        };
 
     document.body.appendChild(script);
 
