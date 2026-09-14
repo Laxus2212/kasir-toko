@@ -58,13 +58,10 @@ function bukaHalaman(namaHalaman, tombol) {
             tombol.textContent.trim();
 
         const judulHalaman =
-            document.getElementById(
-                "judulHalaman"
-            );
+            document.getElementById("judulHalaman");
 
         if (judulHalaman) {
-            judulHalaman.textContent =
-                judul;
+            judulHalaman.textContent = judul;
         }
 
     }
