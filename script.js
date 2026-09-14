@@ -1227,76 +1227,8 @@ function prosesPembayaran() {
 
     keranjang = [];
 
-
-    const uangBayarElement =
-        document.getElementById(
-            "uangBayar"
-        );
-
-
-    if (uangBayarElement) {
-
-        uangBayarElement.value = "";
-
-    }
-
-
-const kembalianElement =
-    document.getElementById(
-        "kembalian"
-    );
-
-const uangBayarElement =
-    document.getElementById(
-        "uangBayar"
-    );
-
-if (
-    kembalianElement &&
-    uangBayarElement
-) {
-
-    const total =
-        getTotal();
-
-    const uangBayar =
-        Number(
-            uangBayarElement.value
-        ) || 0;
-
-    const kembalian =
-        uangBayar - total;
-
-    if (kembalian < 0) {
-
-        kembalianElement.textContent =
-            "Kurang " +
-            formatRupiah(
-                Math.abs(kembalian)
-            );
-
-    } else {
-
-        kembalianElement.textContent =
-            formatRupiah(
-                kembalian
-            );
-
-    }
-
 }
-
-    tampilkanKeranjang();
-
-
-    setTimeout(
-        ambilProduk,
-        1000
-    );
-
-}
-
-
+    
 /*
  * ==========================================
  * KIRIM KE GOOGLE SHEETS
