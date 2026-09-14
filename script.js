@@ -442,64 +442,94 @@ function getTotal() {
 }
 
 
-function tampilkanKeranjang() {
+function tampilkanProdukKasir() {
 
-    const tbody =
-        document.getElementById("keranjang");
+    const container =
+        document.getElementById(
+            "daftarProdukKasir"
+        );
 
-    if (!tbody) {
+    if (!container) {
         return;
     }
 
-    tbody.innerHTML = "";
+    const searchInput =
+        document.getElementById(
+            "searchProdukKasir"
+        );
+
+    const kataKunci =
+        searchInput
+            ? searchInput.value
+                .toLowerCase()
+                .trim()
+            : "";
+
+    container.innerHTML = "";
 
 
-    if (keranjang.length === 0) {
+    daftarProduk.forEach(function(produk) {
 
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="3" class="kosong">
-                    Keranjang kosong
-                </td>
-            </tr>
+        if (
+            String(produk.status)
+                .toLowerCase() !== "aktif"
+        ) {
+            return;
+        }
+
+        const nama =
+            String(produk.nama || "")
+                .toLowerCase();
+
+        const kode =
+            String(produk.kode || "")
+                .toLowerCase();
+
+
+        if (
+            kataKunci !== "" &&
+            !nama.includes(kataKunci) &&
+            !kode.includes(kataKunci)
+        ) {
+            return;
+        }
+
+
+        container.innerHTML += `
+
+            <div
+                class="produk-kasir"
+                onclick="tambahKeKeranjang(
+                    '${escapeHtml(produk.kode)}'
+                )"
+            >
+
+                <div class="nama-produk">
+                    ${escapeHtml(produk.nama)}
+                </div>
+
+                <div class="harga-produk">
+                    ${formatRupiah(produk.hargaJual)}
+                </div>
+
+                <div class="stok-produk">
+                    Stok: ${produk.stok || 0}
+                </div>
+
+            </div>
+
         `;
 
-    } else {
-
-        keranjang.forEach(function(produk) {
-
-            tbody.innerHTML += `
-                <tr>
-
-                    <td>
-                        ${escapeHtml(produk.nama)}
-                    </td>
-
-                    <td>
-                        ${produk.jumlah}
-                    </td>
-
-                    <td>
-                        ${formatRupiah(
-                            produk.subtotal
-                        )}
-                    </td>
-
-                </tr>
-            `;
-
-        });
-
-    }
+    });
 
 
-    const totalElement =
-        document.getElementById("total");
+    if (container.innerHTML === "") {
 
-    if (totalElement) {
-
-        totalElement.textContent =
-            formatRupiah(getTotal());
+        container.innerHTML = `
+            <div class="kosong">
+                Produk tidak ditemukan.
+            </div>
+        `;
 
     }
 
