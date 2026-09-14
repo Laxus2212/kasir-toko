@@ -145,15 +145,12 @@ function produkCallback(result) {
 
 
     daftarProduk =
-        result.data || [];
+    result.data || [];
 
 
-    tampilkanProduk();
-
-    tampilkanProdukKasir();
+tampilkanProduk();
 
 }
-
 
 /*
  * ==========================================
@@ -467,6 +464,14 @@ function tampilkanProdukKasir() {
 
     container.innerHTML = "";
 
+    /*
+     * Jika belum mengetik pencarian,
+     * jangan tampilkan produk apa pun.
+     */
+
+    if (!kataKunci) {
+        return;
+    }
 
     daftarProduk.forEach(function(produk) {
 
@@ -485,15 +490,12 @@ function tampilkanProdukKasir() {
             String(produk.kode || "")
                 .toLowerCase();
 
-
         if (
-            kataKunci !== "" &&
             !nama.includes(kataKunci) &&
             !kode.includes(kataKunci)
         ) {
             return;
         }
-
 
         container.innerHTML += `
 
@@ -521,7 +523,6 @@ function tampilkanProdukKasir() {
         `;
 
     });
-
 
     if (container.innerHTML === "") {
 
